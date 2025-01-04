@@ -3,7 +3,7 @@
 `LibreHardwareMonitorPlugin` is a [Loupedeck](https://loupedeck.com) plugin that uses [Libre Hardware Monitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor) application to show the basic PC hardware parameters (CPU and GPU temperature; CPU, GPU and memory load; battery level; etc.).
 
 <p align="center">
-    <img src="https://github.com/notadoctor99/librehardwaremonitorplugin/raw/master/img/screenshot1.png?raw=true" alt="LibreHardwareMonitorPlugin"/>
+    <img src="https://raw.githubusercontent.com/mcmzero/librehardwaremonitorplugin/refs/heads/master/img/screenshot.png" alt="LibreHardwareMonitorPlugin"/>
 </p>
 
 ### Notes
