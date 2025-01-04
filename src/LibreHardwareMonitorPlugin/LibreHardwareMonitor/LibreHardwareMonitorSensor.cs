@@ -1,6 +1,7 @@
 ﻿namespace NotADoctor99.LibreHardwareMonitorPlugin
 {
     using System;
+    using Loupedeck;
 
     public class LibreHardwareMonitorSensor
     {
@@ -21,6 +22,13 @@
         public LibreHardwareMonitorGaugeType GaugeType { get; }
 
         public Single Value { get; private set; }
+        public Single MinValue { get; private set; }
+        public Single MaxValue { get; private set; }
+
+        public BitmapColor Color { get; set; }
+
+        public BitmapColor GetColor() => this.Color;
+        public BitmapColor SetColor(BitmapColor color) => this.Color = color;
 
         internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LibreHardwareMonitorGaugeType gaugeType)
         {
@@ -32,6 +40,8 @@
             this.DisplayName = displayName;
             this.FormatString = formatString;
             this.Value = value;
+            this.MinValue = value;
+            this.MaxValue = 100;
             this.GaugeType = gaugeType;
         }
 
@@ -52,6 +62,15 @@
             }
 
             this.Value = value;
+            if (value < this.MinValue)
+            {
+                this.MinValue = value;
+            }
+            if (value > this.MaxValue)
+            {
+                this.MaxValue = value;
+            }
+
             return true;
         }
 

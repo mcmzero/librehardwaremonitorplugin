@@ -215,8 +215,10 @@
                     }
 
                     var cpuId = "";
+                    var gpuId = "";
                     var memoryId = "";
                     var batteryId = "";
+                    var storageIds = new List<String>();
 
                     var hardwareQuery = $"SELECT HardwareType,Identifier FROM Hardware WHERE ProcessId = \"{processId}\"";
                     using (var hardwareSearcher = new ManagementObjectSearcher(LibreHardwareMonitorScope, hardwareQuery))
@@ -225,18 +227,27 @@
                         {
                             var hardwareType = hardware.GetHardwareType();
                             var hardwareIdentifier = hardware.GetIdentifier();
+                            PluginLog.Info(hardwareType + " | " + hardwareIdentifier);
 
                             if (hardwareType.StartsWith("cpu", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 cpuId = hardwareIdentifier;
                             }
-                            if (hardwareType.StartsWith("memory", StringComparison.InvariantCultureIgnoreCase))
+                            else if (hardwareType.StartsWith("gpu", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                gpuId = hardwareIdentifier;
+                            }
+                            else if (hardwareType.StartsWith("memory", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 memoryId = hardwareIdentifier;
                             }
-                            if (hardwareType.StartsWith("battery", StringComparison.InvariantCultureIgnoreCase))
+                            else if (hardwareType.StartsWith("battery", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 batteryId = hardwareIdentifier;
+                            }
+                            else if (hardwareType.StartsWith("storage", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                storageIds.Add(hardwareIdentifier);
                             }
                         }
                     }
@@ -252,6 +263,17 @@
                     AddSensor("Temperature", @"{-}\n{0:N1} °C");
                     AddSensor("Voltage", @"{-}\n{0:N3} V");
 
+                    parentName = "GPU";
+                    parentId = gpuId;
+
+                    AddSensor("Clock", @"GPU\n{0:N1} MHz");
+                    AddSensor("Load", @"GPU\n{0:N1} %");
+                    AddSensor("Power", @"GPU\n{0:N1} W");
+                    AddSensor("Temperature", @"GPU\n{0:N1} °C");
+                    AddSensor("SmallData", @"GPU\n{0:N0} MB");
+                    AddSensor("Fan", @"GPU\n{0:N0} RPM");
+                    AddSensor("Control", @"GPU\n{0:N1} %");
+
                     parentName = "Memory";
                     parentId = memoryId;
 
@@ -263,6 +285,18 @@
 
                     AddSensor("Level", @"{-}\n{0:N1} %");
                     AddSensor("Voltage", @"{-}\n{0:N1} V");
+
+                    var storageCount = 0;
+                    foreach (var storageId in storageIds)
+                    {
+                        storageCount++;
+                        parentName = "Storage " + storageCount;
+                        parentId = storageId;
+
+                        AddSensor("Temperature", "Storage "+storageCount+@"\n{0:N1} °C");
+                        AddSensor("Load", @"{-}\n{0:N1} %");
+                    }
+                    storageIds.Clear();
 
                     void AddSensor(String sensorType, String formatString)
                     {
@@ -278,31 +312,146 @@
                                     var name = $"{parentName}-{sensorType}-{displayName}".Replace(' ', '.');
 
                                     var identifier = wmiSensor.GetIdentifier();
+                                    PluginLog.Info(identifier + " | " + displayName);
 
-                                    var gaugeType = LibreHardwareMonitorGaugeType.None;
-                                    if (identifier.EndsWithNoCase("/load/0") && displayName.EqualsNoCase("CPU Total"))
+                                    // sensorColor
+                                    var sensorColor = new BitmapColor(199, 199, 0);
+                                    if (identifier.IndexOf("intel", StringComparison.OrdinalIgnoreCase) >= 0)
                                     {
-                                        gaugeType = LibreHardwareMonitorGaugeType.CPU;
+                                        sensorColor = new BitmapColor(0, 199, 253);
+                                    }
+                                    else if (identifier.IndexOf("amd", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        sensorColor = new BitmapColor(255, 36, 36);
+                                    }
+                                    else if (identifier.IndexOf("nvidia", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        sensorColor = new BitmapColor(118, 185, 0);
+                                    }
+
+                                    // gaugeType
+                                    var gaugeType = LibreHardwareMonitorGaugeType.None;
+                                    if (identifier.IndexOf("cpu/0/load/0", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.CPULoad;
+                                    }
+                                    else if (identifier.IndexOf("cpu/0/power/0", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.CPUPower;
+                                    }
+                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && displayName.IndexOf("Core", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        // amd cpu
+                                        gaugeType = LibreHardwareMonitorGaugeType.CPUCore;
+                                    }
+                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && displayName.IndexOf("CCD", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        // amd cpu
+                                                gaugeType = LibreHardwareMonitorGaugeType.CPUPackage;
+                                    }
+                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && displayName.IndexOf("Average", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        // intel cpu
+                                        gaugeType = LibreHardwareMonitorGaugeType.CPUCore;
+                                    }
+                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && displayName.IndexOf("Package", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        // intel cpu
+                                        gaugeType = LibreHardwareMonitorGaugeType.CPUPackage;
+                                    }
+                                    else if (identifier.IndexOf("load", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && displayName.EqualsNoCase("GPU Core"))
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.GPULoad;
+                                    }
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && identifier.IndexOf("power/0", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.GPUPower;
+                                    }
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && identifier.IndexOf("temperature/0", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.GPUCore;
+                                    }
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && identifier.IndexOf("temperature/2", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.GPUHotspot;
+                                    }
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && identifier.IndexOf("load", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && displayName.EqualsNoCase("GPU Memory"))
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.GPUMemory;
+                                    }
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && identifier.IndexOf("smalldata/3", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.VRAM;
                                     }
                                     else if (identifier.EqualsNoCase("/ram/load/0"))
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.Memory;
                                     }
+                                    else if (identifier.EqualsNoCase("/ram/data/0"))
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.RAM;
+                                    }
+                                    else if (identifier.EqualsNoCase("/ram/load/1"))
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.VrMemory;
+                                    }
+                                    else if (identifier.EqualsNoCase("/ram/data/2"))
+                                    {
+                                        gaugeType = LibreHardwareMonitorGaugeType.VrRAM;
+                                    }
                                     else if (identifier.EqualsNoCase("/battery/level/0") && displayName.EqualsNoCase("Charge Level"))
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.Battery;
                                     }
-
+                                    else if (identifier.IndexOf("cpu/0/load/1", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        // fake(pseudo) type for cpu monitoring
+                                        gaugeType = LibreHardwareMonitorGaugeType.CPUMonitor;
+                                    }
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
+                                        && identifier.IndexOf("/0/smalldata/0", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        // fake(pseudo) type for gpu monitoring
+                                        gaugeType = LibreHardwareMonitorGaugeType.GPUMonitor;
+                                    }
+                                    else if (identifier.IndexOf("/ram/data/1", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        // fake(pseudo) type for ram monitoring
+                                        gaugeType = LibreHardwareMonitorGaugeType.MEMMonitor;
+                                    }
+                                    else if (identifier.IndexOf("/ram/data/3", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        // fake(pseudo) type for ram monitoring
+                                        gaugeType = LibreHardwareMonitorGaugeType.RAMMonitor;
+                                    }
+                                    
                                     var itemFormatString = formatString.Replace("{-}", displayName);
                                     var itemDisplayName = $"[{parentName} {sensorType}] {displayName}";
 
                                     var sensor = new LibreHardwareMonitorSensor(name, wmiSensor.GetInstanceId(), identifier, itemDisplayName, itemFormatString, wmiSensor.GetValue(), gaugeType);
+                                    sensor.Color = sensorColor;
                                     this._sensorsByName[sensor.Name] = sensor;
                                     this._sensorsById[sensor.Id] = sensor;
 
                                     if (sensor.GaugeType != LibreHardwareMonitorGaugeType.None)
                                     {
                                         this._sensorsByGaugeType[sensor.GaugeType] = sensor;
+                                        PluginLog.Info("[AddSensor] " + identifier + " | " + displayName + " | " + itemDisplayName + " | " + itemFormatString);
                                     }
                                 }
                             }
@@ -427,18 +576,9 @@
 
         public static Boolean ActivateOrRun()
         {
-            if (LibreHardwareMonitor.IsRunning())
-            {
-                return LibreHardwareMonitor.Activate();
-            }
-            else if (LibreHardwareMonitor.IsInstalled())
-            {
-                return LibreHardwareMonitor.Run();
-            }
-            else
-            {
-                return false;
-            }
+            return LibreHardwareMonitor.IsRunning()
+                ? LibreHardwareMonitor.Activate()
+                : LibreHardwareMonitor.IsInstalled() ? LibreHardwareMonitor.Run() : false;
         }
 
         // static helpers

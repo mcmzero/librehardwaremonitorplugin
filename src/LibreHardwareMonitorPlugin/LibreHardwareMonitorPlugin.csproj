@@ -104,6 +104,32 @@
     <EmbeddedResource Include="Actions\Images\PressToStart.png" />
     <EmbeddedResource Include="Actions\Images\SensorNotAvailable.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Actions\Images\CPU0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Actions\Images\Power0.png" />
+    <EmbeddedResource Include="Actions\Images\Power1.png" />
+    <EmbeddedResource Include="Actions\Images\Power2.png" />
+    <EmbeddedResource Include="Actions\Images\Power3.png" />
+    <EmbeddedResource Include="Actions\Images\Power4.png" />
+    <EmbeddedResource Include="Actions\Images\Power5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Actions\Images\CPUT0 .png" />
+    <EmbeddedResource Include="Actions\Images\CPUT1 .png" />
+    <EmbeddedResource Include="Actions\Images\CPUT2 .png" />
+    <EmbeddedResource Include="Actions\Images\CPUT3 .png" />
+    <EmbeddedResource Include="Actions\Images\CPUT4 .png" />
+    <EmbeddedResource Include="Actions\Images\CPUT5 .png" />
+    <EmbeddedResource Include="Actions\Images\GPUTemp0 .png" />
+    <EmbeddedResource Include="Actions\Images\GPUTemp1 .png" />
+    <EmbeddedResource Include="Actions\Images\GPUTemp2 .png" />
+    <EmbeddedResource Include="Actions\Images\GPUTemp3 .png" />
+    <EmbeddedResource Include="Actions\Images\GPUTemp4 .png" />
+    <EmbeddedResource Include="Actions\Images\GPUTemp5 .png" />
+    <EmbeddedResource Include="Actions\Images\GPUTemp5_.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>echo $(TargetDir) &gt; "%25LocalAppData%25\Loupedeck\Plugins\$(ProjectName).link"
