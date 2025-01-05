@@ -3,34 +3,45 @@
     public enum LibreHardwareMonitorGaugeType
     {
         None = 0,
-        CPULoad = 1,
-        CPUPower = 2,
-        CPUCore = 3,
-        CPUPackage = 4,
-        CPUMonitor = 5,
 
-        GPULoad = 6,
-        GPUPower = 7,
-        GPUCore = 8,
-        GPUHotspot = 9,
-        GPUMonitor = 10,
+        CPUMonitor = 1,
+        CPULoad = 2,
+        CPUPower = 3,
+        CPUCore = 4,
+        CPUPackage = 5,
 
-        Memory = 11,
-        VrMemory = 12,
-        GPUMemory = 13,
-        MEMMonitor = 14,
+        GPUMonitor = 6,
+        GPULoad = 7,
+        GPUPower = 8,
+        GPUCore = 9,
+        GPUHotspot = 10,
 
-        RAM = 15,
-        VrRAM = 16,
-        VRAM = 17,
-        RAMMonitor = 18,
+        MEMMonitor = 11,
+        Memory = 12,
+        VrMemory = 13,
+        GPUMemory = 14,
 
-        NVME1 = 19,
-        NVME2 = 20,
-        NVME3 = 21,
+        RAMMonitor = 15,
+        RAM = 16,
+        VrRAM = 17,
+        VRAM = 18,
 
-        Battery = 22,
+        DT1Monitor = 19,
+        DT2 = 20,
+        DT3 = 21,
+        DT4Monitor = 22,
+        DT5 = 23,
+        DT6 = 24,
+
+        DU1Monitor = 25,
+        DU2 = 26,
+        DU3 = 27,
+        DU4Monitor = 28,
+        DU5 = 29,
+        DU6 = 30,
+
+        Battery = 31,
         
-        Count = 23 // should always be the last one
+        Count = 32 // should always be the last one
     }
 }

@@ -5,11 +5,9 @@
 
     public class ShowSensorCommand : PluginDynamicCommand
     {
-        public ShowSensorCommand()
-        {
+        public ShowSensorCommand() =>
             //this.IsWidget = true;
             this.GroupName = "Sensors";
-        }
 
         protected override Boolean OnLoad()
         {
