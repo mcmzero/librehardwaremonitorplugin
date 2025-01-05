@@ -45,6 +45,22 @@
             this.GaugeType = gaugeType;
         }
 
+        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LibreHardwareMonitorGaugeType gaugeType, BitmapColor color)
+        {
+            this.Id = LibreHardwareMonitorSensor.CreateSensorId(instanceId, identifier);
+
+            this.Name = name;
+            this.InstanceId = instanceId;
+            this.Identifier = identifier;
+            this.DisplayName = displayName;
+            this.FormatString = formatString;
+            this.Value = value;
+            this.MinValue = value;
+            this.MaxValue = 100;
+            this.GaugeType = gaugeType;
+            this.Color = color;
+        }
+
         public Boolean IsModified()
         {
             var isModified = this._isModified;

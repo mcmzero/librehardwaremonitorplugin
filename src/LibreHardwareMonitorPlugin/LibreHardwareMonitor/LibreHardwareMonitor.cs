@@ -7,6 +7,7 @@
     using System.Management;
     using System.Reflection;
     using System.Timers;
+    using System.Xml.Linq;
 
     using Loupedeck;
 
@@ -293,7 +294,7 @@
                         parentName = "Storage " + storageCount;
                         parentId = storageId;
 
-                        AddSensor("Temperature", "Storage "+storageCount+@"\n{0:N1} °C");
+                        AddSensor("Temperature", "Storage " + storageCount + @"\n{0:N1} °C");
                         AddSensor("Load", @"{-}\n{0:N1} %");
                     }
                     storageIds.Clear();
@@ -303,6 +304,14 @@
                         var sensorQuery = $"SELECT InstanceId,Identifier,Name,Value FROM Sensor WHERE ProcessId = \"{processId}\" AND Parent = \"{parentId}\" AND SensorType = \"{sensorType}\"";
                         using (var sensorSearcher = new ManagementObjectSearcher(LibreHardwareMonitorScope, sensorQuery))
                         {
+                            // sensorColor
+                            var defaultColor = new BitmapColor(199, 199, 0);
+                            var intelColor = new BitmapColor(0, 199, 253);
+                            var amdColor = new BitmapColor(255, 36, 36);
+                            var nvidiaColor = new BitmapColor(118, 185, 0);
+                            var cpuColor = amdColor;
+                            var gpuColor = nvidiaColor;
+
                             foreach (var wmiSensor in sensorSearcher.Get())
                             {
                                 var displayName = wmiSensor.GetDisplayName();
@@ -312,146 +321,173 @@
                                     var name = $"{parentName}-{sensorType}-{displayName}".Replace(' ', '.');
 
                                     var identifier = wmiSensor.GetIdentifier();
-                                    PluginLog.Info(identifier + " | " + displayName);
+                                    PluginLog.Info("\t\t\t\t" + identifier + " | " + displayName);
 
-                                    // sensorColor
-                                    var sensorColor = new BitmapColor(199, 199, 0);
-                                    if (identifier.IndexOf("intel", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    var sensorColor = defaultColor;
+                                    if (identifier.IndexOf("intel", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
-                                        sensorColor = new BitmapColor(0, 199, 253);
+                                        sensorColor = intelColor;
                                     }
-                                    else if (identifier.IndexOf("amd", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("amd", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
-                                        sensorColor = new BitmapColor(255, 36, 36);
+                                        sensorColor = amdColor;
                                     }
-                                    else if (identifier.IndexOf("nvidia", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("nvidia", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
-                                        sensorColor = new BitmapColor(118, 185, 0);
+                                        sensorColor = nvidiaColor;
+                                    }
+                                    if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) != -1)
+                                    {
+                                        cpuColor = sensorColor;
+                                    }
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) != -1)
+                                    {
+                                        gpuColor = sensorColor;
                                     }
 
                                     // gaugeType
                                     var gaugeType = LibreHardwareMonitorGaugeType.None;
-                                    if (identifier.IndexOf("cpu/0/load/0", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    if (identifier.IndexOf("cpu/0/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.CPULoad;
+                                        sensorColor = cpuColor;
                                     }
-                                    else if (identifier.IndexOf("cpu/0/power/0", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("cpu/0/power/0", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.CPUPower;
+                                        sensorColor = cpuColor;
                                     }
-                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && displayName.IndexOf("Core", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) != -1
+                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) != -1
+                                        && displayName.IndexOf("Core", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         // amd cpu
                                         gaugeType = LibreHardwareMonitorGaugeType.CPUCore;
+                                        sensorColor = cpuColor;
                                     }
-                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && displayName.IndexOf("CCD", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) != -1
+                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) != -1
+                                        && displayName.IndexOf("CCD", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         // amd cpu
-                                                gaugeType = LibreHardwareMonitorGaugeType.CPUPackage;
+                                        gaugeType = LibreHardwareMonitorGaugeType.CPUPackage;
+                                        sensorColor = cpuColor;
                                     }
-                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && displayName.IndexOf("Average", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) != -1
+                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) != -1
+                                        && displayName.IndexOf("Average", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         // intel cpu
                                         gaugeType = LibreHardwareMonitorGaugeType.CPUCore;
+                                        sensorColor = cpuColor;
                                     }
-                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && displayName.IndexOf("Package", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("cpu", StringComparison.OrdinalIgnoreCase) != -1
+                                        && identifier.IndexOf("temperature", StringComparison.OrdinalIgnoreCase) != -1
+                                        && displayName.IndexOf("Package", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         // intel cpu
                                         gaugeType = LibreHardwareMonitorGaugeType.CPUPackage;
+                                        sensorColor = cpuColor;
                                     }
-                                    else if (identifier.IndexOf("load", StringComparison.OrdinalIgnoreCase) >= 0
+                                    else if (identifier.IndexOf("load", StringComparison.OrdinalIgnoreCase) != -1
                                         && displayName.EqualsNoCase("GPU Core"))
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.GPULoad;
+                                        sensorColor = gpuColor;
                                     }
-                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && identifier.IndexOf("power/0", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) != -1
+                                        && identifier.IndexOf("power/0", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.GPUPower;
+                                        sensorColor = gpuColor;
                                     }
-                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && identifier.IndexOf("temperature/0", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) != -1
+                                        && identifier.IndexOf("temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.GPUCore;
+                                        sensorColor = gpuColor;
                                     }
-                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && identifier.IndexOf("temperature/2", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) != -1
+                                        && identifier.IndexOf("temperature/2", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.GPUHotspot;
+                                        sensorColor = gpuColor;
                                     }
-                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && identifier.IndexOf("load", StringComparison.OrdinalIgnoreCase) >= 0
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) != -1
+                                        && identifier.IndexOf("load", StringComparison.OrdinalIgnoreCase) != -1
                                         && displayName.EqualsNoCase("GPU Memory"))
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.GPUMemory;
+                                        sensorColor = gpuColor;
                                     }
-                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && identifier.IndexOf("smalldata/3", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) != -1
+                                        && identifier.IndexOf("smalldata/3", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.VRAM;
+                                        sensorColor = defaultColor;
                                     }
                                     else if (identifier.EqualsNoCase("/ram/load/0"))
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.Memory;
+                                        sensorColor = defaultColor;
                                     }
                                     else if (identifier.EqualsNoCase("/ram/data/0"))
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.RAM;
+                                        sensorColor = defaultColor;
                                     }
                                     else if (identifier.EqualsNoCase("/ram/load/1"))
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.VrMemory;
+                                        sensorColor = defaultColor;
                                     }
                                     else if (identifier.EqualsNoCase("/ram/data/2"))
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.VrRAM;
+                                        sensorColor = defaultColor;
                                     }
                                     else if (identifier.EqualsNoCase("/battery/level/0") && displayName.EqualsNoCase("Charge Level"))
                                     {
                                         gaugeType = LibreHardwareMonitorGaugeType.Battery;
+                                        sensorColor = defaultColor;
                                     }
-                                    else if (identifier.IndexOf("cpu/0/load/1", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("cpu/0/clock/0", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         // fake(pseudo) type for cpu monitoring
                                         gaugeType = LibreHardwareMonitorGaugeType.CPUMonitor;
+                                        sensorColor = cpuColor;
                                     }
-                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) >= 0
-                                        && identifier.IndexOf("/0/smalldata/0", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("gpu", StringComparison.OrdinalIgnoreCase) != -1
+                                        && identifier.IndexOf("/0/smalldata/0", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         // fake(pseudo) type for gpu monitoring
                                         gaugeType = LibreHardwareMonitorGaugeType.GPUMonitor;
+                                        sensorColor = gpuColor;
                                     }
-                                    else if (identifier.IndexOf("/ram/data/1", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("/ram/data/1", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         // fake(pseudo) type for ram monitoring
                                         gaugeType = LibreHardwareMonitorGaugeType.MEMMonitor;
+                                        sensorColor = defaultColor;
                                     }
-                                    else if (identifier.IndexOf("/ram/data/3", StringComparison.OrdinalIgnoreCase) >= 0)
+                                    else if (identifier.IndexOf("/ram/data/3", StringComparison.OrdinalIgnoreCase) != -1)
                                     {
                                         // fake(pseudo) type for ram monitoring
                                         gaugeType = LibreHardwareMonitorGaugeType.RAMMonitor;
+                                        sensorColor = defaultColor;
                                     }
-                                    
+
                                     var itemFormatString = formatString.Replace("{-}", displayName);
                                     var itemDisplayName = $"[{parentName} {sensorType}] {displayName}";
 
-                                    var sensor = new LibreHardwareMonitorSensor(name, wmiSensor.GetInstanceId(), identifier, itemDisplayName, itemFormatString, wmiSensor.GetValue(), gaugeType);
-                                    sensor.Color = sensorColor;
+                                    var sensor = new LibreHardwareMonitorSensor(name, wmiSensor.GetInstanceId(), identifier, itemDisplayName, itemFormatString, wmiSensor.GetValue(), gaugeType, sensorColor);
                                     this._sensorsByName[sensor.Name] = sensor;
                                     this._sensorsById[sensor.Id] = sensor;
 
                                     if (sensor.GaugeType != LibreHardwareMonitorGaugeType.None)
                                     {
                                         this._sensorsByGaugeType[sensor.GaugeType] = sensor;
-                                        PluginLog.Info("[AddSensor] " + identifier + " | " + displayName + " | " + itemDisplayName + " | " + itemFormatString);
+                                        PluginLog.Info("[" + sensor.GaugeType + "] " + identifier + " | " + displayName + " | " + itemDisplayName + " | " + itemFormatString);
                                     }
                                 }
                             }
