@@ -74,7 +74,7 @@
         private readonly Single[] _lastMinLevels = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
         private readonly Single[] _lastMaxLevels = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
 
-        private Int32 GetImageIndex(LibreHardwareMonitorGaugeType guageType) => Helpers.MinMax(((Int32)this._lastLevels[(Int32)guageType] + 9) / 20, 0, 5);
+        private Int32 GetImageIndex(LibreHardwareMonitorGaugeType guageType) => Helpers.MinMax(((Int32)this._lastLevels[(Int32)guageType] + 5) / 9, 0, 11);
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
         {
@@ -122,7 +122,6 @@
                 var accentColor = sensor.Color;
                 bitmapBuilder.FillRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], BitmapColor.Black);
 
-                var imageName = "Memory";
                 var imageIndex = this.GetImageIndex(gaugeType);
                 switch (gaugeType)
                 {
@@ -326,7 +325,8 @@
                             levels[i] = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.DT1Monitor + i];
                             guages[i] = (Int32)LibreHardwareMonitorGaugeType.DT1Monitor + i;
                             var yn = n + vn * (i + 1);
-                            //PluginLog.Info($"NVME{i + 1}: " + level + "℃," + x + "," + yn + "," + sensor.Color + "," + titleFontSize + "," + monFontSize + "," + gaugeType);
+                            imageIndex = this.GetImageIndex(LibreHardwareMonitorGaugeType.DT1Monitor);
+                            //PluginLog.Info($"NVME{i + 1}: " + level + "℃," + x + "," + yn + "," + sensor.Color + "," + titleFontSize + "," + monFontSize + "," + gaugeType + "," + imageIndex);
                             if (levels[i] > 0)
                             {
                                 fontColor = levels[i] < 50 ? grayColor : BitmapColor.White;
@@ -456,7 +456,8 @@
                     && gaugeType != LibreHardwareMonitorGaugeType.DU1Monitor
                     && gaugeType != LibreHardwareMonitorGaugeType.DU4Monitor)
                 {
-                    var imageBytes = PluginResources.ReadBinaryFile($"{imageName}{imageIndex}.png");
+                    //PluginLog.Info($"g{imageIndex}.png");
+                    var imageBytes = PluginResources.ReadBinaryFile($"g{imageIndex}.png");
                     bitmapBuilder.DrawImage(imageBytes, x, y0 - 9);
                 }
 

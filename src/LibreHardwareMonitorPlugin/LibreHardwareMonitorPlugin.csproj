@@ -78,57 +78,22 @@
     <EmbeddedResource Include="Actions\OpenApplicationCommand.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Actions\Images\Battery0.png" />
-    <EmbeddedResource Include="Actions\Images\Battery1.png" />
-    <EmbeddedResource Include="Actions\Images\Battery2.png" />
-    <EmbeddedResource Include="Actions\Images\Battery3.png" />
-    <EmbeddedResource Include="Actions\Images\Battery4.png" />
-    <EmbeddedResource Include="Actions\Images\Battery5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Actions\Images\CPU1.png" />
-    <EmbeddedResource Include="Actions\Images\CPU2.png" />
-    <EmbeddedResource Include="Actions\Images\CPU3.png" />
-    <EmbeddedResource Include="Actions\Images\CPU4.png" />
-    <EmbeddedResource Include="Actions\Images\CPU5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Actions\Images\Memory0.png" />
-    <EmbeddedResource Include="Actions\Images\Memory1.png" />
-    <EmbeddedResource Include="Actions\Images\Memory2.png" />
-    <EmbeddedResource Include="Actions\Images\Memory3.png" />
-    <EmbeddedResource Include="Actions\Images\Memory4.png" />
-    <EmbeddedResource Include="Actions\Images\Memory5.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Actions\Images\PressToStart.png" />
     <EmbeddedResource Include="Actions\Images\SensorNotAvailable.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Actions\Images\CPU0.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Actions\Images\Power0.png" />
-    <EmbeddedResource Include="Actions\Images\Power1.png" />
-    <EmbeddedResource Include="Actions\Images\Power2.png" />
-    <EmbeddedResource Include="Actions\Images\Power3.png" />
-    <EmbeddedResource Include="Actions\Images\Power4.png" />
-    <EmbeddedResource Include="Actions\Images\Power5.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Actions\Images\CPUT0 .png" />
-    <EmbeddedResource Include="Actions\Images\CPUT1 .png" />
-    <EmbeddedResource Include="Actions\Images\CPUT2 .png" />
-    <EmbeddedResource Include="Actions\Images\CPUT3 .png" />
-    <EmbeddedResource Include="Actions\Images\CPUT4 .png" />
-    <EmbeddedResource Include="Actions\Images\CPUT5 .png" />
-    <EmbeddedResource Include="Actions\Images\GPUTemp0 .png" />
-    <EmbeddedResource Include="Actions\Images\GPUTemp1 .png" />
-    <EmbeddedResource Include="Actions\Images\GPUTemp2 .png" />
-    <EmbeddedResource Include="Actions\Images\GPUTemp3 .png" />
-    <EmbeddedResource Include="Actions\Images\GPUTemp4 .png" />
-    <EmbeddedResource Include="Actions\Images\GPUTemp5 .png" />
-    <EmbeddedResource Include="Actions\Images\GPUTemp5_.png" />
+    <EmbeddedResource Include="Actions\Images\g0.png" />
+    <EmbeddedResource Include="Actions\Images\g1.png" />
+    <EmbeddedResource Include="Actions\Images\g10.png" />
+    <EmbeddedResource Include="Actions\Images\g11.png" />
+    <EmbeddedResource Include="Actions\Images\g2.png" />
+    <EmbeddedResource Include="Actions\Images\g3.png" />
+    <EmbeddedResource Include="Actions\Images\g4.png" />
+    <EmbeddedResource Include="Actions\Images\g5.png" />
+    <EmbeddedResource Include="Actions\Images\g6.png" />
+    <EmbeddedResource Include="Actions\Images\g7.png" />
+    <EmbeddedResource Include="Actions\Images\g8.png" />
+    <EmbeddedResource Include="Actions\Images\g9.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
