@@ -74,8 +74,8 @@
         private readonly Single[] _lastMinLevels = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
         private readonly Single[] _lastMaxLevels = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
 
-        private Int32 GetImageIndex(LibreHardwareMonitorGaugeType guageType) => Helpers.MinMax(((Int32)this._lastLevels[(Int32)guageType] + 5) / 9, 0, 11);
-        private Int32 GetImageIndexMinMax(LibreHardwareMonitorGaugeType guageType) => (Int32)Helpers.MinMax((100 * (this._lastLevels[(Int32)guageType] - this._lastMinLevels[(Int32)guageType]) / (this._lastMaxLevels[(Int32)guageType] - this._lastMinLevels[(Int32)guageType]) + 5) / 9, 0, 11);
+        private Int32 GetImageIndex(LibreHardwareMonitorGaugeType guageType) => Helpers.MinMax(((Int32)this._lastLevels[(Int32)guageType] + 5) / 9, 0, 15);
+        private Int32 GetImageIndexMinMax(LibreHardwareMonitorGaugeType guageType) => (Int32)Helpers.MinMax((100 * (this._lastLevels[(Int32)guageType] - this._lastMinLevels[(Int32)guageType]) / (this._lastMaxLevels[(Int32)guageType] - this._lastMinLevels[(Int32)guageType]) + 5) / 9, 0, 15);
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
         {

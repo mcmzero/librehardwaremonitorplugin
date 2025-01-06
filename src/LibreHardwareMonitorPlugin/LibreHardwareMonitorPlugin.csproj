@@ -95,6 +95,12 @@
     <EmbeddedResource Include="Actions\Images\g8.png" />
     <EmbeddedResource Include="Actions\Images\g9.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Actions\Images\g12.png" />
+    <EmbeddedResource Include="Actions\Images\g13.png" />
+    <EmbeddedResource Include="Actions\Images\g14.png" />
+    <EmbeddedResource Include="Actions\Images\g15.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>echo $(TargetDir) &gt; "%25LocalAppData%25\Loupedeck\Plugins\$(ProjectName).link"
