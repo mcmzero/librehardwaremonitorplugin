@@ -216,7 +216,7 @@
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.CPUPower];
                         String drtext;
                         drtext = level < 10 ? $"[P] 0{level:N1}W" : $"[P] {level:N1}W";
-                        fontColor = level < 40 ? grayColor : BitmapColor.White;
+                        fontColor = level < 50 ? grayColor : BitmapColor.White;
                         bitmapBuilder.DrawText(drtext, x, y2, width, height, fontColor, monFontSize);
 
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.CPUCore];
@@ -236,7 +236,7 @@
 
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPUPower];
                         drtext = level < 10 ? $"[P] 0{level:N1}W" : $"[P] {level:N1}W";
-                        fontColor = level < 40 ? grayColor : BitmapColor.White;
+                        fontColor = level < 100 ? grayColor : BitmapColor.White;
                         bitmapBuilder.DrawText(drtext, x, y2, width, height, fontColor, monFontSize);
 
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPUHotspot];
