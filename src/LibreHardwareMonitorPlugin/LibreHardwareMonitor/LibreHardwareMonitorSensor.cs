@@ -41,7 +41,7 @@
             this.FormatString = formatString;
             this.Value = value;
             this.MinValue = value;
-            this.MaxValue = 100;
+            this.MaxValue = 80;
             this.GaugeType = gaugeType;
         }
 
@@ -84,7 +84,7 @@
             }
             if (value > this.MaxValue)
             {
-                this.MaxValue = value;
+                this.MaxValue = value < 80 ? 80 : value;
             }
 
             return true;

@@ -342,3 +342,4 @@ src/ConfigUIMac/LoupedeckConfig\.app/Contents/Resources/app\.asar
 src/LoupedeckMacInstaller/compiled/
 
 src/LoupedeckMacInstaller/files/
+*.psd
