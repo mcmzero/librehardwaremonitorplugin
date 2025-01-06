@@ -74,7 +74,6 @@
         }
 
         // process
-
         private Boolean _isRunning = false;
 
         public event EventHandler<EventArgs> ProcessStarted;
@@ -209,7 +208,6 @@
                 try
                 {
                     // read hardware IDs
-
                     if (!this.TryGetProcessId(out var processId))
                     {
                         PluginLog.Error("Cannot get sensors list. Is LibreHardwareMonitor running?");
@@ -287,7 +285,6 @@
                     }
 
                     // read sensors
-
                     var parentName = "CPU";
                     var parentId = cpuId;
 
