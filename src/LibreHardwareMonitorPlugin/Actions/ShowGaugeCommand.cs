@@ -74,8 +74,8 @@
         private readonly Single[] _lastMinLevels = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
         private readonly Single[] _lastMaxLevels = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
 
-        private Int32 GetImageIndex(LibreHardwareMonitorGaugeType guageType) => Helpers.MinMax(((Int32)this._lastLevels[(Int32)guageType] + 5) / 9, 0, 15);
-        private Int32 GetImageIndexMinMax(LibreHardwareMonitorGaugeType guageType) => (Int32)Helpers.MinMax((100 * (this._lastLevels[(Int32)guageType] - this._lastMinLevels[(Int32)guageType]) / (this._lastMaxLevels[(Int32)guageType] - this._lastMinLevels[(Int32)guageType]) + 5) / 9, 0, 15);
+        private Int32 GetImageIndex(LibreHardwareMonitorGaugeType guageType) => Helpers.MinMax(((Int32)this._lastLevels[(Int32)guageType] + 6) / 7, 0, 15);
+        private Int32 GetImageIndexMax(LibreHardwareMonitorGaugeType guageType) => (Int32)Helpers.MinMax((100 * this._lastLevels[(Int32)guageType] / this._lastMaxLevels[(Int32)guageType] + 6) / 7, 0, 15);
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
         {
@@ -105,7 +105,6 @@
                 var fontColor = BitmapColor.White;
 
                 var level = this._lastLevels[(Int32)gaugeType];
-                var minLevel = this._lastMinLevels[(Int32)gaugeType];
                 var maxLevel = this._lastMaxLevels[(Int32)gaugeType];
 
                 var rectangleColor = new BitmapColor(35, 35, 35);
@@ -133,35 +132,20 @@
                     case LibreHardwareMonitorGaugeType.CPUCore:
                         bitmapBuilder.DrawText("Core(℃)", x, y, width, height, sensor.Color, titleFontSize);
                         bitmapBuilder.DrawText($"{level:N1}℃", x, y2, width, height, fontColor, fontSize);
-                        //minLevel = this._lastMinLevels[(Int32)gaugeType];
-                        //if (this._lastMaxLevels[(Int32)gaugeType] < 80)
-                        //{
-                        //    this._lastMaxLevels[(Int32)gaugeType] = 80;
-                        //}
-                        //maxLevel = this._lastMaxLevels[(Int32)gaugeType];
-                        //imageIndex = this.GetImageIndexMinMax(gaugeType);
+                        imageIndex = this.GetImageIndexMax(gaugeType);
                         break;
                     case LibreHardwareMonitorGaugeType.CPUPackage:
                         bitmapBuilder.DrawText("Pkg(℃)", x, y, width, height, sensor.Color, titleFontSize);
                         bitmapBuilder.DrawText($"{level:N1}℃", x, y2, width, height, fontColor, fontSize);
-                        //minLevel = this._lastMinLevels[(Int32)gaugeType];
-                        //if (this._lastMaxLevels[(Int32)gaugeType] < 80)
-                        //{
-                        //    this._lastMaxLevels[(Int32)gaugeType] = 80;
-                        //}
-                        //maxLevel = this._lastMaxLevels[(Int32)gaugeType];
-                        //imageIndex = this.GetImageIndexMinMax(gaugeType);
+                        imageIndex = this.GetImageIndexMax(gaugeType);
                         break;
                     case LibreHardwareMonitorGaugeType.CPUPower:
                         bitmapBuilder.DrawText("Power(W)", x, y, width, height, sensor.Color, titleFontSize);
                         bitmapBuilder.DrawText($"{level:N1}W", x, y2, width, height, fontColor, fontSize);
-                        //minLevel = this._lastMinLevels[(Int32)LibreHardwareMonitorGaugeType.CPUPower];
-                        //if (this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.CPUPower] < 120)
-                        //{
-                        //    this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.CPUPower] = 120;
-                        //}
-                        //maxLevel = this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.CPUPower];
-                        //imageIndex = this.GetImageIndexMinMax(gaugeType);
+                        maxLevel = this._lastMaxLevels[(Int32)gaugeType];
+                        maxLevel = maxLevel < 120 ? 120 : maxLevel;
+                        this._lastMaxLevels[(Int32)gaugeType] = maxLevel;
+                        imageIndex = this.GetImageIndexMax(gaugeType);
                         break;
                     case LibreHardwareMonitorGaugeType.Memory:
                         bitmapBuilder.DrawText("Mem(%)", x, y, width, height, sensor.Color, titleFontSize);
@@ -172,7 +156,6 @@
                         bitmapBuilder.DrawText($"{level:N1}GB", x, y2, width, height, fontColor, fontSize);
                         imageIndex = this.GetImageIndex(LibreHardwareMonitorGaugeType.Memory);
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.Memory];
-                        minLevel = this._lastMinLevels[(Int32)LibreHardwareMonitorGaugeType.Memory];
                         maxLevel = this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.Memory];
                         break;
                     case LibreHardwareMonitorGaugeType.VrMemory:
@@ -184,7 +167,6 @@
                         bitmapBuilder.DrawText($"{level:N1}GB", x, y2, width, height, fontColor, fontSize);
                         imageIndex = this.GetImageIndex(LibreHardwareMonitorGaugeType.VrMemory);
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.VrMemory];
-                        minLevel = this._lastMinLevels[(Int32)LibreHardwareMonitorGaugeType.VrMemory];
                         maxLevel = this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.VrMemory];
                         break;
 
@@ -195,36 +177,26 @@
                     case LibreHardwareMonitorGaugeType.GPUCore:
                         bitmapBuilder.DrawText("Core(℃)", x, y, width, height, sensor.Color, titleFontSize);
                         bitmapBuilder.DrawText($"{level:N1}℃", x, y2, width, height, fontColor, fontSize);
-                        imageIndex = this.GetImageIndexMinMax(gaugeType);
-                        //minLevel = this._lastMinLevels[(Int32)gaugeType];
-                        //if (this._lastMaxLevels[(Int32)gaugeType] < 80)
-                        //{
-                        //    this._lastMaxLevels[(Int32)gaugeType] = 80;
-                        //}
-                        //maxLevel = this._lastMaxLevels[(Int32)gaugeType];
-                        //imageIndex = this.GetImageIndexMinMax(gaugeType);
+                        maxLevel = this._lastMaxLevels[(Int32)gaugeType];
+                        maxLevel = maxLevel < 83 ? 83 : maxLevel;
+                        this._lastMaxLevels[(Int32)gaugeType] = maxLevel;
+                        imageIndex = this.GetImageIndexMax(gaugeType);
                         break;
                     case LibreHardwareMonitorGaugeType.GPUHotspot:
                         bitmapBuilder.DrawText("HSpot(℃)", x, y, width, height, sensor.Color, titleFontSize);
                         bitmapBuilder.DrawText($"{level:N1}℃", x, y2, width, height, fontColor, fontSize);
-                        //minLevel = this._lastMinLevels[(Int32)gaugeType];
-                        //if (this._lastMaxLevels[(Int32)gaugeType] < 80)
-                        //{
-                        //    this._lastMaxLevels[(Int32)gaugeType] = 80;
-                        //}
-                        //maxLevel = this._lastMaxLevels[(Int32)gaugeType];
-                        //imageIndex = this.GetImageIndexMinMax(gaugeType);
+                        maxLevel = this._lastMaxLevels[(Int32)gaugeType];
+                        maxLevel = maxLevel < 83 ? 83 : maxLevel;
+                        this._lastMaxLevels[(Int32)gaugeType] = maxLevel;
+                        imageIndex = this.GetImageIndexMax(gaugeType);
                         break;
                     case LibreHardwareMonitorGaugeType.GPUPower:
                         bitmapBuilder.DrawText("Power(W)", x, y, width, height, sensor.Color, titleFontSize);
                         bitmapBuilder.DrawText($"{level:N1}W", x, y2, width, height, fontColor, fontSize);
-                        //minLevel = this._lastMinLevels[(Int32)LibreHardwareMonitorGaugeType.CPUPower];
-                        //if (this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.CPUPower] < 300)
-                        //{
-                        //    this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.CPUPower] = 300;
-                        //}
-                        //maxLevel = this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.CPUPower];
-                        //imageIndex = this.GetImageIndexMinMax(gaugeType);
+                        maxLevel = this._lastMaxLevels[(Int32)gaugeType];
+                        maxLevel = maxLevel < 320 ? 320 : maxLevel;
+                        this._lastMaxLevels[(Int32)gaugeType] = maxLevel;
+                        imageIndex = this.GetImageIndexMax(gaugeType);
                         break;
                     case LibreHardwareMonitorGaugeType.GPUMemory:
                         bitmapBuilder.DrawText("GPUMem(%)", x, y, width, height, sensor.Color, titleFontSize);
@@ -235,7 +207,6 @@
                         bitmapBuilder.DrawText($"{level:N0}MB", x, y2, width, height, fontColor, fontSize);
                         imageIndex = this.GetImageIndex(LibreHardwareMonitorGaugeType.GPUMemory);
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPUMemory];
-                        minLevel = this._lastMinLevels[(Int32)LibreHardwareMonitorGaugeType.GPUMemory];
                         maxLevel = this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.GPUMemory];
                         break;
 
@@ -257,7 +228,6 @@
                         fontColor = level < 10 ? grayColor : BitmapColor.White;
                         bitmapBuilder.DrawText(drtext, x, y0, width, height, fontColor, monFontSize);
 
-                        minLevel = this._lastMinLevels[(Int32)LibreHardwareMonitorGaugeType.CPULoad];
                         maxLevel = this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.CPULoad];
                         break;
 
@@ -278,7 +248,6 @@
                         fontColor = level < 10 ? grayColor : BitmapColor.White;
                         bitmapBuilder.DrawText(drtext, x, y0, width, height, fontColor, monFontSize);
 
-                        minLevel = this._lastMinLevels[(Int32)LibreHardwareMonitorGaugeType.GPULoad];
                         maxLevel = this._lastMaxLevels[(Int32)LibreHardwareMonitorGaugeType.GPULoad];
                         break;
 
@@ -315,7 +284,6 @@
                             if (levels[i] == maxLevels)
                             {
                                 level = this._lastLevels[guages[i]];
-                                minLevel = this._lastMinLevels[guages[i]];
                                 maxLevel = this._lastMaxLevels[guages[i]];
                                 break;
                             }
@@ -352,7 +320,6 @@
                             if (levels[i] == maxLevels)
                             {
                                 level = this._lastLevels[guages[i]];
-                                minLevel = this._lastMinLevels[guages[i]];
                                 maxLevel = this._lastMaxLevels[guages[i]];
                                 break;
                             }
@@ -384,7 +351,6 @@
                             if (levels[i] == maxLevels)
                             {
                                 level = this._lastLevels[guages[i]];
-                                minLevel = this._lastMinLevels[guages[i]];
                                 maxLevel = this._lastMaxLevels[guages[i]];
                                 break;
                             }
@@ -415,7 +381,6 @@
                             if (levels[i] == maxLevels)
                             {
                                 level = this._lastLevels[guages[i]];
-                                minLevel = this._lastMinLevels[guages[i]];
                                 maxLevel = this._lastMaxLevels[guages[i]];
                                 break;
                             }
@@ -447,7 +412,6 @@
                             if (levels[i] == maxLevels)
                             {
                                 level = this._lastLevels[guages[i]];
-                                minLevel = this._lastMinLevels[guages[i]];
                                 maxLevel = this._lastMaxLevels[guages[i]];
                                 break;
                             }
@@ -479,7 +443,6 @@
                             if (levels[i] == maxLevels)
                             {
                                 level = this._lastLevels[guages[i]];
-                                minLevel = this._lastMinLevels[guages[i]];
                                 maxLevel = this._lastMaxLevels[guages[i]];
                                 break;
                             }
@@ -505,7 +468,7 @@
                     bitmapBuilder.DrawImage(imageBytes, x, y0 - 9);
                 }
 
-                var rateLevel = (level - minLevel) / (maxLevel - minLevel);
+                var rateLevel = level / maxLevel;
                 if (rateLevel > 0.9)
                 {
                     bitmapBuilder.DrawRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], accentColor);
