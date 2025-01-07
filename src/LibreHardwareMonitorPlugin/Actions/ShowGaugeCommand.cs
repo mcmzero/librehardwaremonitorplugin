@@ -239,7 +239,7 @@
                         fontColor = level < 100 ? grayColor : BitmapColor.White;
                         bitmapBuilder.DrawText(drtext, x, y2, width, height, fontColor, monFontSize);
 
-                        level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPUHotspot];
+                        level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPUCore];
                         fontColor = level < 50 ? grayColor : BitmapColor.White;
                         bitmapBuilder.DrawText($"[H] {level:N1}℃", x, y1, width, height, fontColor, monFontSize);
 

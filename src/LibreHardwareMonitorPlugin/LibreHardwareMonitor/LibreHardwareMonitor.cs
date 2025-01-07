@@ -382,11 +382,11 @@
                                             {
                                                 if (identifier.IndexOf("/temperature/2", StringComparison.OrdinalIgnoreCase) != -1)
                                                 {
-                                                    gaugeType = LibreHardwareMonitorGaugeType.CPUCore;
+                                                    gaugeType = LibreHardwareMonitorGaugeType.CPUPackage;   // Tctl / Tdie = package
                                                 }
                                                 else if (identifier.IndexOf("/temperature/3", StringComparison.OrdinalIgnoreCase) != -1)
                                                 {
-                                                    gaugeType = LibreHardwareMonitorGaugeType.CPUPackage;
+                                                    gaugeType = LibreHardwareMonitorGaugeType.CPUCore;      // AMD CPU CCD (Tdie) = core
                                                 }
                                             }
                                             else if (identifier.IndexOf("/intelcpu", StringComparison.OrdinalIgnoreCase) != -1)
