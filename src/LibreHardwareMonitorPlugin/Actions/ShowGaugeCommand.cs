@@ -105,6 +105,7 @@
                 var fontColor = BitmapColor.White;
 
                 var level = this._lastLevels[(Int32)gaugeType];
+                var RLevel = this._lastLevels[(Int32)gaugeType];
                 var maxLevel = this._lastMaxLevels[(Int32)gaugeType];
 
                 var rectangleColor = new BitmapColor(35, 35, 35);
@@ -115,10 +116,13 @@
                 //bitmapBuilder.FillRectangle(frTop[0], frTop[1], frTop[2], frTop[3], rectangleColor);
                 //bitmapBuilder.FillRectangle(frBottom[0], frBottom[1], frBottom[2], frBottom[3], rectangleColor);
 
+                var LeftLine  = new Int32[4] {  3, 2,  3, 76 };
+                var RightLine = new Int32[4] { 75, 2, 75, 76 };
                 var frMiddle = new Int32[4] { 6, 18, 66, 54 };
                 var frOutline = new Int32[4] { 0, 0, 78, 78 };
-                var grayColor = new BitmapColor(120, 120, 120);
-                var darkGrayColor = new BitmapColor(60, 60, 60);
+                var lightGrayColor = new BitmapColor(150, 150, 130);
+                var grayColor = new BitmapColor(120, 120, 100);
+                var darkGrayColor = new BitmapColor(60, 60, 40);
                 var accentColor = sensor.Color;
                 bitmapBuilder.FillRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], BitmapColor.Black);
 
@@ -131,7 +135,8 @@
                         break;
                     case LibreHardwareMonitorGaugeType.CPUCore:
                         bitmapBuilder.DrawText("Core(℃)", x, y, width, height, sensor.Color, titleFontSize);
-                        bitmapBuilder.DrawText($"{level:N1}℃", x, y2, width, height, fontColor, fontSize);
+                        RLevel = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.CPUPackage];
+                        bitmapBuilder.DrawText($"{level:N1} | {RLevel:N1}", x, y2, width, height, fontColor, 10);
                         imageIndex = this.GetImageIndexMax(gaugeType);
                         break;
                     case LibreHardwareMonitorGaugeType.CPUPackage:
@@ -176,7 +181,9 @@
                         break;
                     case LibreHardwareMonitorGaugeType.GPUCore:
                         bitmapBuilder.DrawText("Core(℃)", x, y, width, height, sensor.Color, titleFontSize);
-                        bitmapBuilder.DrawText($"{level:N1}℃", x, y2, width, height, fontColor, fontSize);
+                        RLevel = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPUHotspot];
+                        bitmapBuilder.DrawText($"{level:N1} | {RLevel:N1}", x, y2, width, height, fontColor, 10);
+
                         maxLevel = this._lastMaxLevels[(Int32)gaugeType];
                         maxLevel = maxLevel < 83 ? 83 : maxLevel;
                         this._lastMaxLevels[(Int32)gaugeType] = maxLevel;
@@ -220,6 +227,7 @@
                         bitmapBuilder.DrawText(drtext, x, y2, width, height, fontColor, monFontSize);
 
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.CPUCore];
+                        RLevel = level;
                         fontColor = level < 50 ? grayColor : BitmapColor.White;
                         bitmapBuilder.DrawText($"[C] {level:N1}℃", x, y1, width, height, fontColor, monFontSize);
 
@@ -240,6 +248,7 @@
                         bitmapBuilder.DrawText(drtext, x, y2, width, height, fontColor, monFontSize);
 
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPUCore];
+                        RLevel = level;
                         fontColor = level < 50 ? grayColor : BitmapColor.White;
                         bitmapBuilder.DrawText($"[C] {level:N1}℃", x, y1, width, height, fontColor, monFontSize);
 
@@ -263,20 +272,20 @@
 
                         bitmapBuilder.DrawText("MEM(%)", x, y, width, height, sensor.Color, titleFontSize);
 
-                        level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.Memory];
-                        drtext = levels[0] < 10 ? $"[S] 0{level:N1}%" : $"[S] {level:N1}%";
-                        fontColor = levels[0] < 50 ? grayColor : BitmapColor.White;
-                        bitmapBuilder.DrawText(drtext, x, y0, width, height, fontColor, monFontSize);
-                        
+                        level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPUMemory];
+                        drtext = levels[2] < 10 ? $"[G] 0{level:N1}%" : $"[G] {level:N1}%";
+                        fontColor = levels[2] < 50 ? grayColor : BitmapColor.White;
+                        bitmapBuilder.DrawText(drtext, x, y2, width, height, fontColor, monFontSize);
+
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.VrMemory];
                         drtext = levels[1] < 10 ? $"[V] 0{level:N1}%" : $"[V] {level:N1}%";
                         fontColor = levels[1] < 50 ? grayColor : BitmapColor.White;
                         bitmapBuilder.DrawText(drtext, x, y1, width, height, fontColor, monFontSize);
 
-                        level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPUMemory];
-                        drtext = levels[2] < 10 ? $"[G] 0{level:N1}%" : $"[G] {level:N1}%";
-                        fontColor = levels[2] < 50 ? grayColor : BitmapColor.White;
-                        bitmapBuilder.DrawText(drtext, x, y2, width, height, fontColor, monFontSize);
+                        level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.Memory];
+                        drtext = levels[0] < 10 ? $"[S] 0{level:N1}%" : $"[S] {level:N1}%";
+                        fontColor = levels[0] < 50 ? grayColor : BitmapColor.White;
+                        bitmapBuilder.DrawText(drtext, x, y0, width, height, fontColor, monFontSize);
 
                         var maxLevels = levels.Max();
                         for (var i = 0; i < 3; i++)
@@ -288,6 +297,7 @@
                                 break;
                             }
                         }
+                        RLevel = level;
                         break;
 
                     case LibreHardwareMonitorGaugeType.RAMMonitor:
@@ -302,17 +312,17 @@
 
                         bitmapBuilder.DrawText("RAM(GB)", x, y, width, height, sensor.Color, titleFontSize);
 
-                        level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.RAM];
-                        fontColor = levels[0] < 50 ? grayColor : BitmapColor.White;
-                        bitmapBuilder.DrawText($"[S] {level:N1}G", x, y0, width, height, fontColor, monFontSize);
+                        level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.VRAM];
+                        fontColor = levels[2] < 50 ? grayColor : BitmapColor.White;
+                        bitmapBuilder.DrawText($"[G] {level/1024:N2}G", x, y2, width, height, fontColor, monFontSize);
                         
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.VrRAM];
                         fontColor = levels[1] < 50 ? grayColor : BitmapColor.White;
                         bitmapBuilder.DrawText($"[V] {level:N1}G", x, y1, width, height, fontColor, monFontSize);
                         
-                        level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.VRAM];
-                        fontColor = levels[2] < 50 ? grayColor : BitmapColor.White;
-                        bitmapBuilder.DrawText($"[G] {level/1024:N2}G", x, y2, width, height, fontColor, monFontSize);
+                        level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.RAM];
+                        fontColor = levels[0] < 50 ? grayColor : BitmapColor.White;
+                        bitmapBuilder.DrawText($"[S] {level:N1}G", x, y0, width, height, fontColor, monFontSize);
 
                         maxLevels = levels.Max();
                         for (var i = 0; i < 3; i++)
@@ -324,6 +334,7 @@
                                 break;
                             }
                         }
+                        RLevel = level;
                         break;
 
                     case LibreHardwareMonitorGaugeType.DT1Monitor:
@@ -355,6 +366,7 @@
                                 break;
                             }
                         }
+                        RLevel = level;
                         break;
 
                     case LibreHardwareMonitorGaugeType.DT4Monitor:
@@ -385,6 +397,7 @@
                                 break;
                             }
                         }
+                        RLevel = level;
                         break;
 
                     case LibreHardwareMonitorGaugeType.DU1Monitor:
@@ -416,6 +429,7 @@
                                 break;
                             }
                         }
+                        RLevel = level;
                         break;
 
                     case LibreHardwareMonitorGaugeType.DU4Monitor:
@@ -447,6 +461,7 @@
                                 break;
                             }
                         }
+                        RLevel = level;
                         break;
 
                     case LibreHardwareMonitorGaugeType.Battery:
@@ -469,31 +484,49 @@
                 }
 
                 var rateLevel = level / maxLevel;
+                var mlColor = darkGrayColor;
+                var olColor = darkGrayColor;
+                var rlColor = grayColor;
                 if (rateLevel > 0.9)
                 {
-                    bitmapBuilder.DrawRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], accentColor);
-                    bitmapBuilder.DrawRectangle(frOutline[0], frOutline[1], frOutline[2], frOutline[3], accentColor);
+                    mlColor = lightGrayColor;
+                    olColor = grayColor;
+                    rlColor = mlColor;
                 }
-                else if (rateLevel > 0.7)
+                else if (rateLevel > 0.8)
                 {
-                    bitmapBuilder.DrawRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], accentColor);
-                    bitmapBuilder.DrawRectangle(frOutline[0], frOutline[1], frOutline[2], frOutline[3], grayColor);
+                    mlColor = grayColor;
+                    olColor = lightGrayColor;
+                    rlColor = mlColor;
                 }
-                else if (rateLevel > 0.5)
+                else if (rateLevel > 0.6)
                 {
-                    bitmapBuilder.DrawRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], grayColor);
-                    bitmapBuilder.DrawRectangle(frOutline[0], frOutline[1], frOutline[2], frOutline[3], grayColor);
+                    mlColor = grayColor;
+                    olColor = grayColor;
+                    rlColor = mlColor;
                 }
-                else if (rateLevel > 0.3)
+                else if (rateLevel > 0.4)
                 {
-                    bitmapBuilder.DrawRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], grayColor);
-                    bitmapBuilder.DrawRectangle(frOutline[0], frOutline[1], frOutline[2], frOutline[3], darkGrayColor);
+                    mlColor = darkGrayColor;
+                    olColor = grayColor;
+                    rlColor = mlColor;
+                }
+                else if (rateLevel > 0.2)
+                {
+                    mlColor = grayColor;
+                    olColor = darkGrayColor;
+                    rlColor = mlColor;
                 }
                 else
                 {
-                    bitmapBuilder.DrawRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], darkGrayColor);
-                    bitmapBuilder.DrawRectangle(frOutline[0], frOutline[1], frOutline[2], frOutline[3], darkGrayColor);
+                    mlColor = darkGrayColor;
+                    olColor = darkGrayColor;
+                    rlColor = mlColor;
                 }
+                bitmapBuilder.DrawLine(LeftLine[0], LeftLine[3] - (LeftLine[3] - LeftLine[1]) * level / 100, LeftLine[2], LeftLine[3], rlColor, 3);
+                bitmapBuilder.DrawLine(RightLine[0], RightLine[3] - (LeftLine[3] - LeftLine[1]) * RLevel / 100, RightLine[2], RightLine[3], rlColor, 3);
+                bitmapBuilder.DrawRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], mlColor);
+                bitmapBuilder.DrawRectangle(frOutline[0], frOutline[1], frOutline[2], frOutline[3], olColor);
 
                 return bitmapBuilder.ToImage();
             }
