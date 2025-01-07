@@ -241,7 +241,7 @@
 
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPUCore];
                         fontColor = level < 50 ? grayColor : BitmapColor.White;
-                        bitmapBuilder.DrawText($"[H] {level:N1}℃", x, y1, width, height, fontColor, monFontSize);
+                        bitmapBuilder.DrawText($"[C] {level:N1}℃", x, y1, width, height, fontColor, monFontSize);
 
                         level = this._lastLevels[(Int32)LibreHardwareMonitorGaugeType.GPULoad];
                         drtext = level < 10 ? $"[L] 0{level:N1}%" : $"[L] {level:N1}%";
