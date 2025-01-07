@@ -78,21 +78,14 @@
         private Int32 GetImageIndex(LibreHardwareMonitorGaugeType guageType) => Helpers.MinMax(((Int32)this._lastLevels[(Int32)guageType] + 6) / 7, 0, 15);
         private Int32 GetImageIndexMax(LibreHardwareMonitorGaugeType guageType) => (Int32)Helpers.MinMax((100 * this._lastLevels[(Int32)guageType] / this._lastMaxLevels[(Int32)guageType] + 6) / 7, 0, 15);
 
-        private BitmapColor GetColorByLevel(Single level, Single maxLevel)
+        private BitmapColor GetColorByLevel(Single level, Single maxLevel, Int32 baseValue)
         {
-            var rgbn = Helpers.MinMax((Int32)(75 + 180 * level / maxLevel), 0, 255);
+            var rgbn = Helpers.MinMax((Int32)(baseValue + (255 - baseValue) * level / maxLevel), 0, 255);
             return new BitmapColor(rgbn, rgbn, rgbn);
         }
-        private BitmapColor GetColorByLevel(Single level, Single maxLevel, BitmapColor accentColor) => level > 90 ? accentColor : this.GetColorByLevel(level, maxLevel);
-        private BitmapColor GetColorByLevel(Single level, BitmapColor accentColor)
-        {
-            if (level > 90)
-            {
-                return accentColor;
-            }
-            var rgbn = Helpers.MinMax((Int32)(75 + 180 * level / 100), 0, 255);
-            return new BitmapColor(rgbn, rgbn, rgbn);
-        }
+        private BitmapColor GetColorByLevel(Single level, BitmapColor accentColor) => level > 90 ? accentColor : this.GetColorByLevel(level, 100, 100);
+        private BitmapColor GetColorByLevel(Single level, Single maxLevel, BitmapColor accentColor) => (100 * level/maxLevel) > 90 ? accentColor : this.GetColorByLevel(level, maxLevel, 100);
+        private BitmapColor GetColorByLevel(Single level, Single maxLevel, BitmapColor accentColor, Int32 baseValue) => (100 * level / maxLevel) > 90 ? accentColor : this.GetColorByLevel(level, maxLevel, baseValue);
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
         {
@@ -364,7 +357,7 @@
                             //PluginLog.Info($"NVME{i + 1}: " + level + "℃," + x + "," + yn + "," + sensor.Color + "," + titleFontSize + "," + monFontSize + "," + gaugeType + "," + imageIndex);
                             if (levels[i] > 0)
                             {
-                                bitmapBuilder.DrawText($"[{i + 1}] {levels[i]:N0}℃", x, ys[i], width, height, this.GetColorByLevel(levels[i], accentColor), monFontSize);
+                                bitmapBuilder.DrawText($"[{i + 1}] {levels[i]:N0}℃", x, ys[i], width, height, this.GetColorByLevel(levels[i], maxLevels[i], accentColor), monFontSize);
                             }
                         }
                         break;
@@ -380,7 +373,7 @@
                             //PluginLog.Info($"NVME{i + 4}: " + level + "℃," + x + "," + yn + "," + sensor.Color + "," + titleFontSize + "," + monFontSize + "," + gaugeType);
                             if (levels[i] > 0)
                             {
-                                bitmapBuilder.DrawText($"[{i + 4}] {levels[i]:N0}℃", x, ys[i], width, height, this.GetColorByLevel(levels[i], accentColor), monFontSize);
+                                bitmapBuilder.DrawText($"[{i + 4}] {levels[i]:N0}℃", x, ys[i], width, height, this.GetColorByLevel(levels[i], maxLevels[i], accentColor), monFontSize);
                             }
                         }
                         break;
@@ -457,8 +450,8 @@
                 endPoint    = middlePoint  + (RightLine[3] - RightLine[1]) * levels[1] / maxLevels[1] / 2;
                 bitmapBuilder.DrawLine(RightLine[0], startPoint, RightLine[2], endPoint, this.GetColorByLevel(levels[1], maxLevels[1], accentColor), 3);
 
-                bitmapBuilder.DrawRectangle(frOutline[0], frOutline[1], frOutline[2], frOutline[3], this.GetColorByLevel(levels[0] + 20, maxLevels[0], accentColor));
-                bitmapBuilder.DrawRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], this.GetColorByLevel(levels[0], maxLevels[0], accentColor));
+                bitmapBuilder.DrawRectangle(frOutline[0], frOutline[1], frOutline[2], frOutline[3], this.GetColorByLevel(levels[0], maxLevels[0], accentColor, 0));
+                bitmapBuilder.DrawRectangle(frMiddle[0], frMiddle[1], frMiddle[2], frMiddle[3], this.GetColorByLevel(levels[0], maxLevels[0], accentColor, 0));
 
                 return bitmapBuilder.ToImage();
             }
