@@ -235,7 +235,7 @@
                         {
                             var hardwareType = hardware.GetHardwareType();
                             var hardwareIdentifier = hardware.GetIdentifier();
-                            PluginLog.Info("\tHardwareType: " + hardwareType + " | " + hardwareIdentifier);
+                            PluginLog.Info("\t\tHardwareType: " + hardwareType + " | " + hardwareIdentifier);
 
                             if (hardwareType.StartsWith("cpu", StringComparison.InvariantCultureIgnoreCase))
                             {
