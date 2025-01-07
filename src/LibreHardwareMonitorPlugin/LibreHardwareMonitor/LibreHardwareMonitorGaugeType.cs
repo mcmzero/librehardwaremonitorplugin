@@ -6,14 +6,14 @@
 
         CPUMonitor = 1,
         CPULoad = 2,
-        CPUPower = 3,
-        CPUCore = 4,
+        CPUCore = 3,
+        CPUPower = 4,
         CPUPackage = 5,
 
         GPUMonitor = 6,
         GPULoad = 7,
-        GPUPower = 8,
-        GPUCore = 9,
+        GPUCore = 8,
+        GPUPower = 9,
         GPUHotspot = 10,
 
         MEMMonitor = 11,
