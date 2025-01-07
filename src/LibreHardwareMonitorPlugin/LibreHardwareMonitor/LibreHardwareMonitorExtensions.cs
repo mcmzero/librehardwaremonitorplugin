@@ -18,24 +18,24 @@
 
         public static Single GetValue(this ManagementBaseObject managementBaseObject) => (Single)managementBaseObject["Value"];
 
-        public static Boolean HasSameItemsAs<T>(this T[] array1, T[] array2)
-        {
-            if ((null == array1) && (null == array2))
-            {
-                return true;
-            }
+        //public static Boolean HasSameItemsAs<T>(this T[] arrays[1], T[] arrays[2])
+        //{
+        //    if ((null == arrays[1]) && (null == arrays[2]))
+        //    {
+        //        return true;
+        //    }
 
-            if ((null == array1) || (null == array2))
-            {
-                return false;
-            }
+        //    if ((null == arrays[1]) || (null == arrays[2]))
+        //    {
+        //        return false;
+        //    }
 
-            if (array1.Count() != array2.Count())
-            {
-                return false;
-            }
+        //    if (arrays[1].Count() != arrays[2].Count())
+        //    {
+        //        return false;
+        //    }
 
-            return !array1.Except(array2).Any() && !array2.Except(array1).Any();
-        }
+        //    return !arrays[1].Except(arrays[2]).Any() && !arrays[2].Except(arrays[1]).Any();
+        //}
     }
 }
