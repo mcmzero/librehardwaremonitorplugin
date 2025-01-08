@@ -129,7 +129,7 @@
                 bitmapBuilder.Clear(rectangleColor);
 
                 // Rectangle: x, y , width, height
-                var frOutline  = new Int32[4] { 0, 0, 79, 79 };
+                var frOutline  = new Int32[4] { 0, 0, 79, 79 }; // 80x80
                 var frMiddle   = new Int32[4] { frOutline[0] + 7, frOutline[1] + 17, frOutline[2] - 7 * 2 + 1, frOutline[3] - 24 };
 
                 // Line: x1, y1, x2, y2
