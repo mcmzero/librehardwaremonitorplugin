@@ -23,7 +23,8 @@
 
         public LibreHardwareMonitor()
         {
-            this._periodicTimer.Interval = 2_000;
+            //this._periodicTimer.Interval = 2_000;
+            this._periodicTimer.Interval = 500;
             this._periodicTimer.AutoReset = true;
             this._periodicTimer.Elapsed += this.OnPeriodicTimerElapsed;
 
@@ -161,7 +162,7 @@
 
         public Boolean TryGetSensor(LibreHardwareMonitorGaugeType gaugeType, out LibreHardwareMonitorSensor sensor)
         {
-            sensor = null;
+            sensor = null; 
             return this._isRunning && this._sensorsByGaugeType.TryGetValueSafe(gaugeType, out sensor);
         }
 
@@ -246,7 +247,8 @@
                                 }
                                 else if (hardwareIdentifier.IndexOf("amd", StringComparison.OrdinalIgnoreCase) != -1)
                                 {
-                                    cpuColor = amdColor;
+                                    cpuColor = intelColor;
+                                    //cpuColor = amdColor;
                                 }
                                 else if (hardwareIdentifier.IndexOf("nvidia", StringComparison.OrdinalIgnoreCase) != -1)
                                 {
