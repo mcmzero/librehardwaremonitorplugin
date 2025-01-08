@@ -27,21 +27,25 @@
         VRAM = 18,
 
         DT1Monitor = 19,
-        DT2 = 20,
-        DT3 = 21,
-        DT4Monitor = 22,
-        DT5 = 23,
-        DT6 = 24,
+        DT2Monitor = 20,
+        DiskT1 = 21,
+        DiskT2 = 22,
+        DiskT3 = 23,
+        DiskT4 = 24,
+        DiskT5 = 25,
+        DiskT6 = 26,
 
-        DU1Monitor = 25,
-        DU2 = 26,
-        DU3 = 27,
-        DU4Monitor = 28,
-        DU5 = 29,
-        DU6 = 30,
+        DU1Monitor = 27,
+        DU2Monitor = 28,
+        DiskU1 = 29,
+        DiskU2 = 30,
+        DiskU3 = 31,
+        DiskU4 = 32,
+        DiskU5 = 33,
+        DiskU6 = 34,
 
-        Battery = 31,
-        
-        Count = 32 // should always be the last one
+        Battery = 35,
+
+        Count = 36 // should always be the last one
     }
 }

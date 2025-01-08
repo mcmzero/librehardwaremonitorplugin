@@ -1,6 +1,7 @@
 ﻿namespace NotADoctor99.LibreHardwareMonitorPlugin
 {
     using System;
+
     using Loupedeck;
 
     public class LibreHardwareMonitorSensor
@@ -20,6 +21,7 @@
         public String FormatString { get; }
 
         public LibreHardwareMonitorGaugeType GaugeType { get; }
+        public LibreHardwareMonitorGaugeType MonitorType { get; }
 
         public Single Value { get; private set; }
         public Single MinValue { get; private set; }
@@ -30,22 +32,7 @@
         public BitmapColor GetColor() => this.Color;
         public BitmapColor SetColor(BitmapColor color) => this.Color = color;
 
-        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LibreHardwareMonitorGaugeType gaugeType)
-        {
-            this.Id = LibreHardwareMonitorSensor.CreateSensorId(instanceId, identifier);
-
-            this.Name = name;
-            this.InstanceId = instanceId;
-            this.Identifier = identifier;
-            this.DisplayName = displayName;
-            this.FormatString = formatString;
-            this.Value = value;
-            this.MinValue = value;
-            this.MaxValue = 95;
-            this.GaugeType = gaugeType;
-        }
-
-        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LibreHardwareMonitorGaugeType gaugeType, BitmapColor color)
+        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LibreHardwareMonitorGaugeType gaugeType, LibreHardwareMonitorGaugeType monitorType)
         {
             this.Id = LibreHardwareMonitorSensor.CreateSensorId(instanceId, identifier);
 
@@ -58,6 +45,23 @@
             this.MinValue = value;
             this.MaxValue = 100;
             this.GaugeType = gaugeType;
+            this.MonitorType = monitorType;
+        }
+
+        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LibreHardwareMonitorGaugeType gaugeType, LibreHardwareMonitorGaugeType monitorType, BitmapColor color)
+        {
+            this.Id = LibreHardwareMonitorSensor.CreateSensorId(instanceId, identifier);
+
+            this.Name = name;
+            this.InstanceId = instanceId;
+            this.Identifier = identifier;
+            this.DisplayName = displayName;
+            this.FormatString = formatString;
+            this.Value = value;
+            this.MinValue = value;
+            this.MaxValue = 100;
+            this.GaugeType = gaugeType;
+            this.MonitorType = monitorType;
             this.Color = color;
         }
 

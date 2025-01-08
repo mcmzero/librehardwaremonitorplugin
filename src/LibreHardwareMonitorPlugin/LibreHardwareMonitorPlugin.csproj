@@ -59,6 +59,7 @@
     <Compile Include="Helpers\PluginLog.cs" />
     <Compile Include="Helpers\PluginResources.cs" />
     <Compile Include="LibreHardwareMonitor\LibreHardwareMonitorExtensions.cs" />
+    <Compile Include="LibreHardwareMonitor\LibreHardwareMonitorMonitorValueChangedEventArgs.cs" />
     <Compile Include="LibreHardwareMonitor\LibreHardwareMonitorSensor.cs" />
     <Compile Include="LibreHardwareMonitor\LibreHardwareMonitorGaugeValueChangedEventArgs.cs" />
     <Compile Include="LibreHardwareMonitor\NativeMethods.cs" />
