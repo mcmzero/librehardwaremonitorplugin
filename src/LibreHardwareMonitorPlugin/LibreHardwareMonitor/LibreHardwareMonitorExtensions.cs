@@ -1,7 +1,6 @@
 ﻿namespace NotADoctor99.LibreHardwareMonitorPlugin
 {
     using System;
-    using System.Linq;
     using System.Management;
 
     public static class LibreHardwareMonitorExtensions

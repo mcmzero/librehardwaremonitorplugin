@@ -1,6 +1,7 @@
 ﻿namespace NotADoctor99.LibreHardwareMonitorPlugin
 {
     using System;
+
     using Loupedeck;
 
     public class ShowSensorCommand : PluginDynamicCommand

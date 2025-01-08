@@ -1,7 +1,6 @@
 ﻿namespace NotADoctor99.LibreHardwareMonitorPlugin
 {
     using System;
-    using System.Diagnostics;
     using System.Management;
 
     class Program
