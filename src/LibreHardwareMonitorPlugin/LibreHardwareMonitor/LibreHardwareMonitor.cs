@@ -22,7 +22,7 @@
         public LibreHardwareMonitor()
         {
             //this._periodicTimer.Interval = 2_000;
-            this._periodicTimer.Interval = 250;
+            this._periodicTimer.Interval = 500;
             this._periodicTimer.AutoReset = true;
             this._periodicTimer.Elapsed += this.OnPeriodicTimerElapsed;
 
