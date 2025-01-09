@@ -227,7 +227,7 @@
                     var storageIds = new List<String>();
 
                     // sensorColor
-                    var defaultColor = new BitmapColor(200, 220, 200);
+                    var defaultColor = new BitmapColor(255, 150, 200);
                     var intelColor = new BitmapColor(0, 199, 253);
                     var amdColor = new BitmapColor(255, 36, 36);
                     var nvidiaColor = new BitmapColor(118, 185, 0);
