@@ -82,7 +82,6 @@
         private readonly Int32 monFontSize = 12;
         private readonly BitmapColor fontColor = BitmapColor.White;
 
-        private String drText;
         private readonly String[] drTitleText = new String[3];
         private readonly String[] drUnitText = new String[3];
         private readonly Int32[] drTextY = new Int32[4];
@@ -169,10 +168,11 @@
                     guageType[i] = (Int32)gaugeType;
                 }
 
+                String drText;
                 var accentColor = sensor.Color;
                 bitmapBuilder.Clear(new BitmapColor(35, 35, 35));
                 bitmapBuilder.FillRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2], this.frMiddle[3], BitmapColor.Black);
-                var imageIndex = this.GetImageIndex(gaugeType);
+                //var imageIndex = this.GetImageIndex(gaugeType);
                 switch (gaugeType)
                 {
                     // Guages
@@ -180,7 +180,7 @@
                         bitmapBuilder.DrawText("CPU(%)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.CPUCore:
                         bitmapBuilder.DrawText("Core(℃)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
@@ -192,7 +192,7 @@
                         maxLevel[0] = maxLevel[0] < maxLimit ? maxLimit : maxLevel[0];
                         maxLevel[1] = maxLevel[0];
                         this._lastMaxLevel[guageType[0]] = maxLevel[0];
-                        imageIndex = this.GetImageIndexMax(gaugeType);
+                        //imageIndex = this.GetImageIndexMax(gaugeType);
 
                         curLevel[2] = this._lastLevel[guageType[2]];
                         maxLevel[2] = this._lastMaxLevel[guageType[2]];
@@ -210,8 +210,8 @@
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("℃", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
 
-                        imageIndex = this.GetImageIndexMax(gaugeType);
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        //imageIndex = this.GetImageIndexMax(gaugeType);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.CPUPower:
                         bitmapBuilder.DrawText("Power(W)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
@@ -224,53 +224,53 @@
                         maxLevel[1] = maxLevel[0];
                         maxLevel[2] = maxLevel[0];
 
-                        imageIndex = this.GetImageIndexMax(gaugeType);
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        //imageIndex = this.GetImageIndexMax(gaugeType);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.Memory:
                         bitmapBuilder.DrawText("Mem(%)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.RAM:
                         bitmapBuilder.DrawText("RAM(GB)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("GB", +20, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
 
-                        imageIndex = this.GetImageIndex(LibreHardwareMonitorGaugeType.Memory);
+                        //imageIndex = this.GetImageIndex(LibreHardwareMonitorGaugeType.Memory);
                         for (i = 0; i < 3; i++)
                         {
                             maxLevel[i] = this._lastMaxLevel[(Int32)LibreHardwareMonitorGaugeType.Memory];
                             curLevel[i] = this._lastLevel[(Int32)LibreHardwareMonitorGaugeType.Memory];
                         }
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.VrMemory:
                         bitmapBuilder.DrawText("VrMem(%)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.VrRAM:
                         bitmapBuilder.DrawText("VrRAM(GB)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("GB", +20, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
 
-                        imageIndex = this.GetImageIndex(LibreHardwareMonitorGaugeType.VrMemory);
+                        //imageIndex = this.GetImageIndex(LibreHardwareMonitorGaugeType.VrMemory);
                         for (i = 0; i < 3; i++)
                         {
                             maxLevel[i] = this._lastMaxLevel[(Int32)LibreHardwareMonitorGaugeType.VrMemory];
                             curLevel[i] = this._lastLevel[(Int32)LibreHardwareMonitorGaugeType.VrMemory];
                         }
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.GPULoad:
                         bitmapBuilder.DrawText("GPU(%)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.GPUCore:
                         bitmapBuilder.DrawText("Core(℃)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
@@ -282,7 +282,7 @@
                         maxLevel[0] = maxLevel[0] < maxLimit ? maxLimit : maxLevel[0];
                         maxLevel[1] = maxLevel[0];
                         this._lastMaxLevel[guageType[0]] = maxLevel[0];
-                        imageIndex = this.GetImageIndexMax(gaugeType);
+                        //imageIndex = this.GetImageIndexMax(gaugeType);
 
                         curLevel[2] = this._lastLevel[guageType[2]];
                         maxLevel[2] = this._lastMaxLevel[guageType[2]];
@@ -306,8 +306,8 @@
                         maxLevel[1] = maxLevel[0];
                         maxLevel[2] = maxLevel[0];
 
-                        imageIndex = this.GetImageIndexMax(gaugeType);
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        //imageIndex = this.GetImageIndexMax(gaugeType);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.GPUPower:
                         bitmapBuilder.DrawText("Power(W)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
@@ -320,27 +320,27 @@
                         maxLevel[1] = maxLevel[0];
                         maxLevel[2] = maxLevel[0];
 
-                        imageIndex = this.GetImageIndexMax(gaugeType);
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        //imageIndex = this.GetImageIndexMax(gaugeType);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.GPUMemory:
                         bitmapBuilder.DrawText("VMem(%)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.VRAM:
                         bitmapBuilder.DrawText("VRAM(MB)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N0}", x - 7, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("MB", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
 
-                        imageIndex = this.GetImageIndex(LibreHardwareMonitorGaugeType.GPUMemory);
+                        //imageIndex = this.GetImageIndex(LibreHardwareMonitorGaugeType.GPUMemory);
                         for (i = 0; i < 3; i++)
                         {
                             maxLevel[i] = this._lastMaxLevel[(Int32)LibreHardwareMonitorGaugeType.GPUMemory];
                             curLevel[i] = this._lastLevel[(Int32)LibreHardwareMonitorGaugeType.GPUMemory];
                         }
-                        this.DrawImage(bitmapBuilder, imageIndex, curLevel, maxLevel, accentColor);
+                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     // Storages
@@ -386,8 +386,8 @@
                         {
                             maxLevel[i] = this._lastMaxLevel[guageType[i]];
                             curLevel[i] = this._lastMonLevels[guageType[i]];
-                            this.drText = curLevel[i] < 10 ? $"0{curLevel[i]:N1}" : $"{curLevel[i]:N1}";
-                            bitmapBuilder.DrawText(this.drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
+                            drText = $"{curLevel[i]:N1}";
+                            bitmapBuilder.DrawText(drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drTitleText[i], -21, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drUnitText[i], +24, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                         }
@@ -412,8 +412,8 @@
                         {
                             maxLevel[i] = this._lastMaxLevel[guageType[i]];
                             curLevel[i] = this._lastMonLevels[guageType[i]];
-                            this.drText = curLevel[i] < 10 ? $"0{curLevel[i]:N1}" : $"{curLevel[i]:N1}";
-                            bitmapBuilder.DrawText(this.drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
+                            drText = $"{curLevel[i]:N1}";
+                            bitmapBuilder.DrawText(drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drTitleText[i], -21, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drUnitText[i], +24, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                         }
@@ -438,8 +438,8 @@
                         {
                             maxLevel[i] = this._lastMaxLevel[guageType[i]];
                             curLevel[i] = this._lastMonLevels[guageType[i]];
-                            this.drText = curLevel[i] < 10 ? $"0{curLevel[i]:N1}" : $"{curLevel[i]:N1}";
-                            bitmapBuilder.DrawText(this.drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
+                            drText = $"{curLevel[i]:N1}";
+                            bitmapBuilder.DrawText(drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drTitleText[i], -21, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drUnitText[i], +24, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                         }
@@ -464,8 +464,8 @@
                         {
                             maxLevel[i] = this._lastMaxLevel[guageType[i]];
                             curLevel[i] = i == 2 ? this._lastMonLevels[guageType[i]] / 1024 : this._lastMonLevels[guageType[i]];
-                            this.drText = curLevel[i] < 10 ? $"0{curLevel[i]:N1}" : $"{curLevel[i]:N1}";
-                            bitmapBuilder.DrawText(this.drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
+                            drText = $"{curLevel[i]:N1}";
+                            bitmapBuilder.DrawText(drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drTitleText[i], -21, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drUnitText[i], +24, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                         }
@@ -493,8 +493,8 @@
                             curLevel[i] = this._lastMonLevels[guageType[i]];
                             if (curLevel[i] > 0)
                             {
-                                this.drText = curLevel[i] < 10 ? $"0{curLevel[i]:N0}" : $"{curLevel[i]:N0}";
-                                bitmapBuilder.DrawText(this.drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
+                                drText = $"{curLevel[i]:N0}";
+                                bitmapBuilder.DrawText(drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                                 bitmapBuilder.DrawText(this.drTitleText[i], -21, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                                 bitmapBuilder.DrawText(this.drUnitText[i], +24, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             }
@@ -513,8 +513,8 @@
                             curLevel[i] = this._lastMonLevels[guageType[i]];
                             if (curLevel[i] > 0)
                             {
-                                this.drText = curLevel[i] < 10 ? $"0{curLevel[i]:N0}" : $"{curLevel[i]:N0}";
-                                bitmapBuilder.DrawText(this.drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
+                                drText = $"{curLevel[i]:N0}";
+                                bitmapBuilder.DrawText(drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                                 bitmapBuilder.DrawText(this.drTitleText[i], -21, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                                 bitmapBuilder.DrawText(this.drUnitText[i], +24, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             }
@@ -533,8 +533,8 @@
                             curLevel[i] = this._lastMonLevels[guageType[i]];
                             if (curLevel[i] > 0)
                             {
-                                this.drText = curLevel[i] < 10 ? $"0{curLevel[i]:N1}" : $"{curLevel[i]:N1}";
-                                bitmapBuilder.DrawText(this.drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
+                                drText = $"{curLevel[i]:N1}";
+                                bitmapBuilder.DrawText(drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                                 bitmapBuilder.DrawText(this.drTitleText[i], -21, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                                 bitmapBuilder.DrawText(this.drUnitText[i], +24, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             }
@@ -553,8 +553,8 @@
                             curLevel[i] = this._lastMonLevels[guageType[i]];
                             if (curLevel[i] > 0)
                             {
-                                this.drText = curLevel[i] < 10 ? $"0{curLevel[i]:N1}" : $"{curLevel[i]:N1}";
-                                bitmapBuilder.DrawText(this.drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
+                                drText = $"{curLevel[i]:N1}";
+                                bitmapBuilder.DrawText(drText, x + 6, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                                 bitmapBuilder.DrawText(this.drTitleText[i], -21, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                                 bitmapBuilder.DrawText(this.drUnitText[i], +24, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             }
@@ -609,7 +609,7 @@
             bitmapBuilder.DrawRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2], this.frMiddle[3], this.GetColorByLevel(curLevel[0], maxLevel[0], baseValue));
         }
 
-        private void DrawImage(BitmapBuilder bitmapBuilder, Int32 imageIndex, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor)
+        private void DrawImage(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor)
         {
             //bitmapBuilder.DrawImage(PluginResources.ReadBinaryFile($"g{imageIndex}.png"), 0, this.drTextY[0] - 12);
             bitmapBuilder.DrawImage(PluginResources.ReadBinaryFile($"g5.png"), 0, this.drTextY[0] - 12);
