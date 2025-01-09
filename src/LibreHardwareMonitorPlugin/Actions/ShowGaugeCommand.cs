@@ -577,29 +577,30 @@
         private void DrawBox(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor)
         {
             // Top Line
+            var red = new BitmapColor(255, 0, 0);
             var baseValue = 70;
             var middlePoint = this.TopLine[0] + (this.TopLine[2] - this.TopLine[0]) / 2;
             var startPoint = middlePoint - (this.TopLine[2] - this.TopLine[0]) * curLevel[2] / maxLevel[2] / 2;
             var endPoint = middlePoint + (this.TopLine[2] - this.TopLine[0]) * curLevel[2] / maxLevel[2] / 2;
-            bitmapBuilder.DrawLine(startPoint, this.TopLine[1], endPoint, this.TopLine[3], this.GetColorByLevel(curLevel[2], maxLevel[2], baseValue, BitmapColor.White, accentColor), 3);
+            bitmapBuilder.DrawLine(startPoint, this.TopLine[1], endPoint, this.TopLine[3], this.GetColorByLevel(curLevel[2], maxLevel[2], baseValue, red, accentColor), 3);
 
             // Bottom Line
             middlePoint = this.BottomLine[0] + (this.BottomLine[2] - this.BottomLine[0]) / 2;
             startPoint = middlePoint - (this.BottomLine[2] - this.BottomLine[0]) * curLevel[2] / maxLevel[2] / 2;
             endPoint = middlePoint + (this.BottomLine[2] - this.BottomLine[0]) * curLevel[2] / maxLevel[2] / 2;
-            bitmapBuilder.DrawLine(startPoint, this.BottomLine[1], endPoint, this.BottomLine[3], this.GetColorByLevel(curLevel[2], maxLevel[2], baseValue, BitmapColor.White, accentColor), 3);
+            bitmapBuilder.DrawLine(startPoint, this.BottomLine[1], endPoint, this.BottomLine[3], this.GetColorByLevel(curLevel[2], maxLevel[2], baseValue, red, accentColor), 3);
 
             // Left Line
             middlePoint = this.LeftLine[1] + (this.LeftLine[3] - this.LeftLine[1]) / 2;
             startPoint = middlePoint - (this.LeftLine[3] - this.LeftLine[1]) * curLevel[0] / maxLevel[0] / 2;
             endPoint = middlePoint + (this.LeftLine[3] - this.LeftLine[1]) * curLevel[0] / maxLevel[0] / 2;
-            bitmapBuilder.DrawLine(this.LeftLine[0], startPoint, this.LeftLine[2], endPoint, this.GetColorByLevel(curLevel[0], maxLevel[0], baseValue, BitmapColor.White, accentColor), 3);
+            bitmapBuilder.DrawLine(this.LeftLine[0], startPoint, this.LeftLine[2], endPoint, this.GetColorByLevel(curLevel[0], maxLevel[0], baseValue, red, accentColor), 3);
 
             // Right Line
             middlePoint = this.RightLine[1] + (this.RightLine[3] - this.RightLine[1]) / 2;
             startPoint = middlePoint - (this.RightLine[3] - this.RightLine[1]) * curLevel[1] / maxLevel[1] / 2;
             endPoint = middlePoint + (this.RightLine[3] - this.RightLine[1]) * curLevel[1] / maxLevel[1] / 2;
-            bitmapBuilder.DrawLine(this.RightLine[0], startPoint, this.RightLine[2], endPoint, this.GetColorByLevel(curLevel[1], maxLevel[1], baseValue, BitmapColor.White, accentColor), 3);
+            bitmapBuilder.DrawLine(this.RightLine[0], startPoint, this.RightLine[2], endPoint, this.GetColorByLevel(curLevel[1], maxLevel[1], baseValue, red, accentColor), 3);
 
             // Out Line
             bitmapBuilder.DrawRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[3], this.GetColorByLevel(curLevel[0], maxLevel[0], baseValue));
@@ -622,8 +623,9 @@
             var level = curLevel[0] / maxLevel[0];
             var frH = 1 + height * level;
             var frY = 1 + y2 - frH;
-            
-            accentColor = level > 0.9 ? new BitmapColor(255, 0, 0) : accentColor;
+
+            var red = new BitmapColor(255, 0, 0);
+            accentColor = level > 0.9 ? red : accentColor;
             bitmapBuilder.FillRectangle((Int32)x1, (Int32)frY, (Int32)width, (Int32)frH, new BitmapColor(accentColor, 200));
         }
         private void DrawImage2(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor)
@@ -639,15 +641,16 @@
             var level = curLevel[0] / maxLevel[0];
             var frH = 1 + height * level;
             var frY = 1 + y2 - frH;
-            
-            accentColor = level > 0.9 ? new BitmapColor(255, 0, 0) : accentColor;
+
+            var red = new BitmapColor(255, 0, 0);
+            accentColor = level > 0.9 ? red : accentColor;
             bitmapBuilder.FillRectangle((Int32)x1, (Int32)frY, (Int32)width, (Int32)frH, new BitmapColor(accentColor, 200));
 
             level = curLevel[2] / maxLevel[2];
             frH = 1 + height * level;
             frY = 1 + y2 - frH;
-            
-            accentColor = level > 0.9 ? new BitmapColor(255, 0, 0) : accentColor;
+
+            accentColor = level > 0.9 ? red : accentColor;
             bitmapBuilder.FillRectangle((Int32)(x1 + width + 8), (Int32)frY, (Int32)width, (Int32)frH, new BitmapColor(accentColor, 200));
         }
 
