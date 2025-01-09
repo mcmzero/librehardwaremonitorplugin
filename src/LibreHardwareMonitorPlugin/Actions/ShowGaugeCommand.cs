@@ -131,14 +131,12 @@
         {
             if (!Enum.TryParse<LibreHardwareMonitorGaugeType>(actionParameter, out var gaugeType))
             {
-                //PluginLog.Info("GetCommandImage: " + actionParameter);
                 return PluginHelpers.GetNotAvailableButtonImage();
             }
             if (!LibreHardwareMonitorPlugin.HardwareMonitor.TryGetSensor(gaugeType, out var sensor))
             {
                 if (!LibreHardwareMonitorPlugin.HardwareMonitor.TryGetSensorList(gaugeType, out var sensorList))
                 {
-                    //PluginLog.Info("GetCommandImage: " + actionParameter);
                     return PluginHelpers.GetNotAvailableButtonImage();
                 }
                 else
@@ -172,19 +170,20 @@
 
                 String drText;
                 var accentColor = sensor.Color;
-                bitmapBuilder.Clear(new BitmapColor(35, 35, 35));
-                bitmapBuilder.FillRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2], this.frMiddle[3], BitmapColor.Black);
                 //var imageIndex = this.GetImageIndex(gaugeType);
                 switch (gaugeType)
                 {
                     // Guages
                     case LibreHardwareMonitorGaugeType.CPULoad:
+                        this.DrawInit(bitmapBuilder);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
                         bitmapBuilder.DrawText("CPU", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.CPUCore:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("Core(℃)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
 
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.CPUCore;
@@ -202,16 +201,20 @@
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 15, this.drTextY[2], this.width, this.height, this.fontColor, this.doubleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[1]:N1}", x + 16, this.drTextY[2], this.width, this.height, this.fontColor, this.doubleFontSize);
 
-                        this.DrawImage2(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar2(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.CPUPackage:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("Pkgage", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("℃", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
 
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.CPUPower:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("Power", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("W", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
@@ -222,15 +225,19 @@
                         maxLevel[1] = maxLevel[0];
                         maxLevel[2] = maxLevel[0];
 
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.Memory:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("Mem", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.RAM:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("RAM", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         guageType[1] = (Int32)LibreHardwareMonitorGaugeType.RAM;
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.Memory;
@@ -248,15 +255,19 @@
                             maxLevel[i] = this._lastMaxLevel[guageType[0]];
                             curLevel[i] = this._lastLevel[guageType[0]];
                         }
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.VrMemory:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("VrMem", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.VrRAM:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("VrRAM", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         guageType[1] = (Int32)LibreHardwareMonitorGaugeType.VrRAM;
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.VrMemory;
@@ -274,16 +285,20 @@
                             maxLevel[i] = this._lastMaxLevel[guageType[0]];
                             curLevel[i] = this._lastLevel[guageType[0]];
                         }
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.GPULoad:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("GPU", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.GPUCore:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("Core(℃)", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
 
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.GPUCore;
@@ -301,9 +316,11 @@
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 15, this.drTextY[2], this.width, this.height, this.fontColor, this.doubleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[1]:N1}", x + 16, this.drTextY[2], this.width, this.height, this.fontColor, this.doubleFontSize);
 
-                        this.DrawImage2(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar2(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.GPUHotspot:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("HSpot", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("℃", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
@@ -314,9 +331,11 @@
                         maxLevel[1] = maxLevel[0];
                         maxLevel[2] = maxLevel[0];
 
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.GPUPower:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("Power", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("W", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
@@ -327,15 +346,18 @@
                         maxLevel[1] = maxLevel[0];
                         maxLevel[2] = maxLevel[0];
 
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.GPUMemory:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("VMem", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                     case LibreHardwareMonitorGaugeType.VRAM:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("VRAM", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         guageType[1] = (Int32)LibreHardwareMonitorGaugeType.VRAM;
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.GPUMemory;
@@ -353,7 +375,8 @@
                             maxLevel[i] = this._lastMaxLevel[guageType[0]];
                             curLevel[i] = this._lastLevel[guageType[0]];
                         }
-                        this.DrawImage(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawProgressBar1(bitmapBuilder, curLevel, maxLevel, accentColor);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     // Storages
@@ -363,9 +386,11 @@
                     case LibreHardwareMonitorGaugeType.DiskT4:
                     case LibreHardwareMonitorGaugeType.DiskT5:
                     case LibreHardwareMonitorGaugeType.DiskT6:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText($"{gaugeType}", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N0}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("℃", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.DiskU1:
@@ -374,13 +399,16 @@
                     case LibreHardwareMonitorGaugeType.DiskU4:
                     case LibreHardwareMonitorGaugeType.DiskU5:
                     case LibreHardwareMonitorGaugeType.DiskU6:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText($"{gaugeType}", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     // Monitors
                     case LibreHardwareMonitorGaugeType.CPUMonitor:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("CPU", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
 
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.CPULoad;
@@ -404,9 +432,11 @@
                             bitmapBuilder.DrawText(drText, x + 8, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drUnitText[i], x + 25, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.unitFontSize);
                         }
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.GPUMonitor:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("GPU", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
 
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.GPULoad;
@@ -430,9 +460,11 @@
                             bitmapBuilder.DrawText(drText, x + 8, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drUnitText[i], x + 25, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.unitFontSize);
                         }
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.MEMMonitor:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("MEM", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
 
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.Memory;
@@ -456,9 +488,11 @@
                             bitmapBuilder.DrawText(drText, x + 8, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.monFontSize);
                             bitmapBuilder.DrawText(this.drUnitText[i], x + 25, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.unitFontSize);
                         }
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.RAMMonitor:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("RAM", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
 
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.RAM;
@@ -492,9 +526,11 @@
                             maxLevel[i] = this._lastMaxLevel[guageType[i]];
                             curLevel[i] = this._lastLevel[guageType[i]];
                         }
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.DT1Monitor:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("DISK", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         for (i = 0; i < 3; i++)
                         {
@@ -512,9 +548,11 @@
                                 bitmapBuilder.DrawText(this.drUnitText[i], x + 25, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.unitFontSize);
                             }
                         }
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.DT2Monitor:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("DISK", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         for (i = 0; i < 3; i++)
                         {
@@ -532,9 +570,11 @@
                                 bitmapBuilder.DrawText(this.drUnitText[i], x + 25, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.unitFontSize);
                             }
                         }
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.DU1Monitor:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("DISK", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         for (i = 0; i < 3; i++)
                         {
@@ -552,9 +592,11 @@
                                 bitmapBuilder.DrawText(this.drUnitText[i], x + 25, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.unitFontSize);
                             }
                         }
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.DU2Monitor:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("DISK", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         for (i = 0; i < 3; i++)
                         {
@@ -572,22 +614,29 @@
                                 bitmapBuilder.DrawText(this.drUnitText[i], x + 25, this.drTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], accentColor), this.unitFontSize);
                             }
                         }
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
 
                     case LibreHardwareMonitorGaugeType.Battery:
+                        this.DrawInit(bitmapBuilder);
                         bitmapBuilder.DrawText("Battery", x, y, this.width, this.height, sensor.Color, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", x - 1, this.drTextY[2], this.width, this.height, this.fontColor, this.fontSize);
                         bitmapBuilder.DrawText("%", x + 18, this.drTextY[2], this.width, this.height, this.fontColor, this.unitFontSize);
+                        this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor);
                         break;
                 }
-
-                this.DrawBox(bitmapBuilder, curLevel, maxLevel, accentColor);
 
                 return bitmapBuilder.ToImage();
             }
         }
+        private void DrawInit(BitmapBuilder bitmapBuilder)
+        {
+            var rgb = 55;
+            bitmapBuilder.Clear(new BitmapColor(rgb,rgb,rgb));
+            bitmapBuilder.FillRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2], this.frMiddle[3], BitmapColor.Black);
+        }
 
-        private void DrawBox(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor)
+        private void DrawGuage(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor)
         {
             var red = new BitmapColor(255, 0, 0);
             var baseValue = 50;
@@ -629,10 +678,10 @@
             bitmapBuilder.DrawRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2], this.frMiddle[3], this.GetColorByLevel(curLevel[0], maxLevel[0], baseValue));
         }
 
-        private void DrawImage(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor)
+        private void DrawProgressBar1(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor)
         {
             //bitmapBuilder.DrawImage(PluginResources.ReadBinaryFile($"g{imageIndex}.png"), 0, this.drTextY[0] - 12);
-            bitmapBuilder.DrawImage(PluginResources.ReadBinaryFile($"g5.png"), 0, this.drTextY[0] - 12);
+            bitmapBuilder.DrawImage(PluginResources.ReadBinaryFile($"g0.png"), 0, this.drTextY[0] - 12);
 
             const Single width = 52;
             const Single height = 20;
@@ -648,9 +697,9 @@
             accentColor = level > 0.9 ? red : accentColor;
             bitmapBuilder.FillRectangle((Int32)x1, (Int32)frY, (Int32)width, (Int32)frH, new BitmapColor(accentColor, 200));
         }
-        private void DrawImage2(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor)
+        private void DrawProgressBar2(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor)
         {
-            bitmapBuilder.DrawImage(PluginResources.ReadBinaryFile($"g4.png"), 0, this.drTextY[0] - 12);
+            bitmapBuilder.DrawImage(PluginResources.ReadBinaryFile($"g0.png"), 0, this.drTextY[0] - 12);
 
             const Single width = 22;
             const Single height = 20;
