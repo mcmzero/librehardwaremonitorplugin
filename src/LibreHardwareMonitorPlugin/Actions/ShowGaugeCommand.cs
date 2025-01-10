@@ -284,7 +284,7 @@
                     // Guages
                     case LibreHardwareMonitorGaugeType.CPULoad:
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
-                        bitmapBuilder.DrawText("CPU", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("CPU Load", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
                         bitmapBuilder.DrawText(curLevel[0] > 99.9 ? $"{curLevel[0]:N0}" : $"{curLevel[0]:N1}", titleX - 1, this.drTextY[1], this.width, this.height, valueColor, this.fontSize);
                         bitmapBuilder.DrawText("%", unitX, this.drTextY[1] + unitY, this.width, this.height, unitColor, this.unitFontSize);
                         break;
@@ -303,7 +303,7 @@
                         this._lastMaxLevel[guageType[1]] = maxLevel[1];
 
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 2);
-                        bitmapBuilder.DrawText("Core(℃)", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("CPU Core", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N0}", titleX - 15, this.drTextY[1], this.width, this.height, valueColor, this.doubleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[1]:N0}", titleX + 15, this.drTextY[1], this.width, this.height, valueColor, this.doubleFontSize);
                         bitmapBuilder.DrawText("℃", unitX - 25, this.drTextY[1] + unitY - 14, this.width, this.height, unitColor, this.unitFontSize);
@@ -312,13 +312,13 @@
                         break;
                     case LibreHardwareMonitorGaugeType.CPUPackage:
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
-                        bitmapBuilder.DrawText("Pkgage", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("CPU Pkgage", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize - 2);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", titleX - 1, this.drTextY[1], this.width, this.height, valueColor, this.fontSize);
                         bitmapBuilder.DrawText("℃", unitX, this.drTextY[1] + unitY, this.width, this.height, unitColor, this.unitFontSize);
                         break;
                     case LibreHardwareMonitorGaugeType.CPUPower:
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
-                        bitmapBuilder.DrawText("Power", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("CPU Power", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", titleX - 1, this.drTextY[1], this.width, this.height, valueColor, this.fontSize);
                         bitmapBuilder.DrawText("W", unitX, this.drTextY[1] + unitY, this.width, this.height, unitColor, this.unitFontSize);
 
@@ -375,7 +375,7 @@
 
                     case LibreHardwareMonitorGaugeType.GPULoad:
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
-                        bitmapBuilder.DrawText("GPU", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("GPU Load", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", titleX - 1, this.drTextY[1], this.width, this.height, valueColor, this.fontSize);
                         bitmapBuilder.DrawText("%", unitX, this.drTextY[1] + unitY, this.width, this.height, unitColor, this.unitFontSize);
                         break;
@@ -393,7 +393,7 @@
                         this._lastMaxLevel[guageType[1]] = maxLevel[1];
 
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 2);
-                        bitmapBuilder.DrawText("Core(℃)", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("GPU Core", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N0}", titleX - 15, this.drTextY[1], this.width, this.height, valueColor, this.doubleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[1]:N0}", titleX + 15, this.drTextY[1], this.width, this.height, valueColor, this.doubleFontSize);
                         bitmapBuilder.DrawText("℃", unitX - 25, this.drTextY[1] + unitY - 14, this.width, this.height, unitColor, this.unitFontSize);
@@ -401,7 +401,7 @@
                         break;
                     case LibreHardwareMonitorGaugeType.GPUHotspot:
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
-                        bitmapBuilder.DrawText("HSpot", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("GPU HotSpot", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize - 2);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", titleX - 1, this.drTextY[1], this.width, this.height, valueColor, this.fontSize);
                         bitmapBuilder.DrawText("℃", unitX, this.drTextY[1] + unitY, this.width, this.height, unitColor, this.unitFontSize);
 
@@ -413,7 +413,7 @@
                         break;
                     case LibreHardwareMonitorGaugeType.GPUPower:
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
-                        bitmapBuilder.DrawText("Power", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("GPU Power", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", titleX - 1, this.drTextY[1], this.width, this.height, valueColor, this.fontSize);
                         bitmapBuilder.DrawText("W", unitX, this.drTextY[1] + unitY, this.width, this.height, unitColor, this.unitFontSize);
 
@@ -482,7 +482,7 @@
                             curLevel[i] = this._lastLevel[guageType[i]];
                         }
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
-                        bitmapBuilder.DrawText("CPU", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("CPU Monitor", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize - 2);
                         this.drTitleText[0] = "[L]";
                         this.drTitleText[1] = "[C]";
                         this.drTitleText[2] = "[P]";
@@ -510,7 +510,7 @@
                             curLevel[i] = this._lastLevel[guageType[i]];
                         }
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
-                        bitmapBuilder.DrawText("GPU", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("GPU Monitor", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize - 2);
                         this.drTitleText[0] = "[L]";
                         this.drTitleText[1] = "[C]";
                         this.drTitleText[2] = "[P]";
@@ -538,7 +538,7 @@
                             curLevel[i] = this._lastLevel[guageType[i]];
                         }
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
-                        bitmapBuilder.DrawText("Memory", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
+                        bitmapBuilder.DrawText("Memory Load", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize - 2);
                         this.drTitleText[0] = "[S]";
                         this.drTitleText[1] = "[V]";
                         this.drTitleText[2] = "[G]";
