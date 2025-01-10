@@ -159,7 +159,7 @@
             var lh = height * level;
             var ly = 1 + y2 - lh;
 
-            bitmapBuilder.FillRectangle((Int32)x1, (Int32)ly, (Int32)width, (Int32)lh, new BitmapColor(accentColor, 50));
+            bitmapBuilder.FillRectangle((Int32)x1, (Int32)ly, (Int32)width, (Int32)lh, new BitmapColor(accentColor, alpha));
             bitmapBuilder.DrawRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2], this.frMiddle[3], accentColor);
         }
 
@@ -223,7 +223,8 @@
 
             using (var bitmapBuilder = new BitmapBuilder(PluginImageSize.Width90))
             {
-                var accentColor = (gaugeType == LibreHardwareMonitorGaugeType.Memory || gaugeType == LibreHardwareMonitorGaugeType.MemoryLoad) ? new BitmapColor(253, 100, 150) : sensor.Color;
+                var accentColor = (gaugeType == LibreHardwareMonitorGaugeType.MemoryMonitor
+                                   || gaugeType == LibreHardwareMonitorGaugeType.MemoryLoadMonitor) ? new BitmapColor(253, 100, 150) : sensor.Color;
                 var titleColor = BitmapColor.White;
                 var valueColor = BitmapColor.White;
                 var unitColor = accentColor;
