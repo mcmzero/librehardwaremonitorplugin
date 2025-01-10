@@ -122,8 +122,8 @@
         private Int32 GetImageIndex(LibreHardwareMonitorGaugeType guageType) => Helpers.MinMax(((Int32)this._lastLevel[(Int32)guageType] + 6) / 7, 0, 15);
         private Int32 GetImageIndexMax(LibreHardwareMonitorGaugeType guageType) => (Int32)Helpers.MinMax((100 * this._lastLevel[(Int32)guageType] / this._lastMaxLevel[(Int32)guageType] + 6) / 7, 0, 15);
 
-        private BitmapColor GetColorByLevel(Single level, Single maxLevel, Int32 baseValue, BitmapColor accentColor, BitmapColor color) => new BitmapColor((100 * level / maxLevel) > 90 ? accentColor : color, Helpers.MinMax((Int32)(baseValue + (255 - baseValue) * level / maxLevel), 0, 255));
-        private BitmapColor GetColorByLevel(Single level, Single maxLevel, Int32 baseValue, BitmapColor accentColor) => new BitmapColor((100 * level / maxLevel) > 90 ? new BitmapColor(255, 30, 30) : accentColor, Helpers.MinMax((Int32)(baseValue + (255 - baseValue) * level / maxLevel), 0, 255));
+        private BitmapColor GetColorByLevel(Single level, Single maxLevel, Int32 baseValue, BitmapColor accentColor, BitmapColor color) => new BitmapColor(level / maxLevel > 0.9 ? accentColor : color, Helpers.MinMax((Int32)(baseValue + (255 - baseValue) * level / maxLevel), 0, 255));
+        private BitmapColor GetColorByLevel(Single level, Single maxLevel, Int32 baseValue, BitmapColor accentColor) => new BitmapColor(level / maxLevel > 0.9 ? new BitmapColor(255, 30, 30) : accentColor, Helpers.MinMax((Int32)(baseValue + (255 - baseValue) * level / maxLevel), 0, 255));
         private BitmapColor GetColorByLevel(Single level, Single maxLevel, Int32 baseValue) => this.GetColorByLevel(level, maxLevel, baseValue, BitmapColor.White);
         private BitmapColor GetColorByLevel(Single level, Single maxLevel, BitmapColor accentColor) => this.GetColorByLevel(level, maxLevel, 200, accentColor);
 
@@ -131,18 +131,19 @@
         {
             bitmapBuilder.Clear(BitmapColor.Black);
 
-            var alpha = 70 * 255 / 100;
-            var color = new BitmapColor(accentColor, alpha);
+            var alpha = 70 * 2.55f;
+            var color = new BitmapColor(accentColor, (Int32)alpha);
             bitmapBuilder.FillRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[1] + 15, color);
-            alpha = 15 * 255 / 100;
-            color = new BitmapColor(accentColor, alpha);
+            alpha = 15 * 2.55f;
+            color = new BitmapColor(accentColor, (Int32)alpha);
             bitmapBuilder.FillRectangle(this.frOutline[0], this.frOutline[1] + 17, this.frOutline[2], this.frOutline[3], color);
+
+            alpha = 70 * 2.55f;
+            this.DrawOutline(bitmapBuilder, curLevel, maxLevel, new BitmapColor(accentColor, (Int32)alpha));
 
             bitmapBuilder.DrawRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[3], accentColor);
             bitmapBuilder.FillRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2], this.frMiddle[3], BitmapColor.Black);
 
-            alpha = 70 * 255 / 100;
-            this.DrawOutline(bitmapBuilder, curLevel, maxLevel, new BitmapColor(accentColor, alpha));
             if (barCount == 2)
             {
                 this.DrawBar2(bitmapBuilder, curLevel, maxLevel, accentColor, 100, 125);
@@ -162,16 +163,16 @@
             var y2 = y1 + height;
 
             var level = curLevel[0] / maxLevel[0];
-            var frH = height * level;
-            var frY = 1 + y2 - frH;
+            var lh = height * level;
+            var ly = 1 + y2 - lh;
 
-            var red = new BitmapColor(255, 0, 0);
-            bitmapBuilder.FillRectangle((Int32)x1, (Int32)frY, (Int32)width, (Int32)frH, new BitmapColor(accentColor, alpha));
+            bitmapBuilder.FillRectangle((Int32)x1, (Int32)ly, (Int32)width, (Int32)lh, new BitmapColor(accentColor, 50));
             bitmapBuilder.DrawRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2], this.frMiddle[3], accentColor);
         }
+
         private void DrawBar2(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor, Int32 alpha1, Int32 alpha2)
         {
-            Single width = this.frMiddle[2] / 2 - 4;
+            var width = this.frMiddle[2] * 0.5f - 4;
             Single height = this.frMiddle[3] - 4;
             Single x1 = this.frMiddle[0] + 2;
             Single y1 = this.frMiddle[1] + 2;
@@ -215,15 +216,15 @@
             var level = curLevel[0] / maxLevel[0];
             var middlePoint = this.LeftLine[1] + (this.LeftLine[3] - this.LeftLine[1]) / 2;
             var startPoint = middlePoint - (this.LeftLine[3] - this.LeftLine[1]) * level / 2;
-            var endPoint = middlePoint + (this.LeftLine[3] - this.LeftLine[1]) * level / 2;
-            bitmapBuilder.DrawLine(this.LeftLine[0] - 1, startPoint, this.LeftLine[2] - 1, endPoint, color, 4);
+            var endPoint = middlePoint + (this.LeftLine[3] - this.LeftLine[1]) * level / 2 + 1;
+            bitmapBuilder.DrawLine(this.LeftLine[0] - 3, startPoint, this.LeftLine[2] - 3, endPoint, color, 6);
 
             // Right Line
             //level = curLevel[1] / maxLevel[1];
             middlePoint = this.RightLine[1] + (this.RightLine[3] - this.RightLine[1]) / 2;
             startPoint = middlePoint - (this.RightLine[3] - this.RightLine[1]) * level / 2;
-            endPoint = middlePoint + (this.RightLine[3] - this.RightLine[1]) * level / 2;
-            bitmapBuilder.DrawLine(this.RightLine[0] + 2, startPoint, this.RightLine[2] + 2, endPoint, color, 4);
+            endPoint = middlePoint + (this.RightLine[3] - this.RightLine[1]) * level / 2 + 1;
+            bitmapBuilder.DrawLine(this.RightLine[0] + 4, startPoint, this.RightLine[2] + 4, endPoint, color, 6);
         }
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
