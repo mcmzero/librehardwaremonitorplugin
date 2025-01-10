@@ -16,15 +16,15 @@
         GPUPower = 9,
         GPUHotspot = 10,
 
-        MEMMonitor = 11,
-        Memory = 12,
-        VrMemory = 13,
-        GPUMemory = 14,
+        MemoryLoadMonitor = 11,
+        MemoryLoad = 12,
+        VirtualMemoryLoad = 13,
+        GPUMemoryLoad = 14,
 
-        RAMMonitor = 15,
-        RAM = 16,
-        VrRAM = 17,
-        VRAM = 18,
+        MemoryMonitor = 15,
+        Memory = 16,
+        VirtualMemory = 17,
+        GPUMemory = 18,
 
         DT1Monitor = 19,
         DT2Monitor = 20,
