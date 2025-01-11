@@ -149,13 +149,14 @@
             var w = this.middleSqureCoordinates[2] - 3;
             var h = this.middleSqureCoordinates[3] - 4;
 
-            this.GetRectangleYHByLevel(curLevel[0] / maxLevel[0], y, h, out var bottomY, out var bottomH);
 
             bitmapBuilder.FillRectangle(this.middleSqureCoordinates[0],
                                         this.middleSqureCoordinates[1],
                                         this.middleSqureCoordinates[2],
                                         this.middleSqureCoordinates[3],
                                         BitmapColor.Black);
+
+            this.GetRectangleYHByLevel(curLevel[0] / maxLevel[0], y, h, out var bottomY, out var bottomH);
             bitmapBuilder.FillRectangle(x, bottomY, w, bottomH, barColor);
             bitmapBuilder.DrawRectangle(this.middleSqureCoordinates[0],
                                         this.middleSqureCoordinates[1],
@@ -197,7 +198,7 @@
             // y1 = y2 - height;
             // y2 = y1 + height;
             bottomH = (Int32)(height * level);
-            bottomY = height + y - bottomH + 1;
+            bottomY = height + y - bottomH;
         }
         private void GetLineY1Y2ByLevel(Single level, Int32 y1, Int32 y2, out Int32 middleY1, out Int32 middleY2)
         {
@@ -205,7 +206,7 @@
             var middleY = y1 + halfHeight;
             var levelH = halfHeight * level;
             middleY1 = (Int32)(middleY - levelH);
-            middleY2 = (Int32)(middleY + levelH + 1);
+            middleY2 = (Int32)(middleY + levelH);
         }
 
         private void DrawOutline(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor leftColor, BitmapColor rightColor)
