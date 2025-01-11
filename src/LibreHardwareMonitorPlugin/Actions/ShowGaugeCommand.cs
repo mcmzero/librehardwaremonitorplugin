@@ -111,7 +111,6 @@
         private readonly Single[] _lastLevel = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
         private readonly Single[] _lastMinLevels = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
         private readonly Single[] _lastMaxLevel = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
-        private Object x;
 
         private Int32 GetImageIndex(LibreHardwareMonitorGaugeType guageType) => Helpers.MinMax(((Int32)this._lastLevel[(Int32)guageType] + 6) / 7, 0, 15);
         private Int32 GetImageIndexMax(LibreHardwareMonitorGaugeType guageType) => (Int32)Helpers.MinMax((100 * this._lastLevel[(Int32)guageType] / this._lastMaxLevel[(Int32)guageType] + 6) / 7, 0, 15);
@@ -591,11 +590,12 @@
                     case LibreHardwareMonitorGaugeType.MonStorageUG1:
                     case LibreHardwareMonitorGaugeType.MonStorageUG2:
                         var ut = gaugeType == LibreHardwareMonitorGaugeType.MonStorageTG1 || gaugeType == LibreHardwareMonitorGaugeType.MonStorageTG2 ? "℃" : "%";
-                        var tt = gaugeType == LibreHardwareMonitorGaugeType.MonStorageTG1 || gaugeType == LibreHardwareMonitorGaugeType.MonStorageUG2 ? "Storage G1" : "Storage G2";
+                        var tt = gaugeType == LibreHardwareMonitorGaugeType.MonStorageTG1 || gaugeType == LibreHardwareMonitorGaugeType.MonStorageUG1 ? "Storage G1" : "Storage G2";
                         for (i = 0; i < 3; i++)
                         {
                             monType[i] = (Int32)gaugeType + i + 1;
-                            titleText[i] = $"[{i + 1}]";
+                            titleText[i] = (gaugeType == LibreHardwareMonitorGaugeType.MonStorageTG1 || gaugeType == LibreHardwareMonitorGaugeType.MonStorageTG2 ? $"[T" : $"[U")
+                                         + (gaugeType == LibreHardwareMonitorGaugeType.MonStorageTG1 || gaugeType == LibreHardwareMonitorGaugeType.MonStorageUG1 ? $"{i + 1}]" : $"{i + 4}]");
                             unitText[i] = ut;
 
                             maxLevel[i] = this._lastMaxLevel[monType[i]];
@@ -608,7 +608,7 @@
                                     bitmapBuilder.DrawText(tt, titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
                                 }
                                 valueText = $"{curLevel[i]:N0}";
-                                bitmapBuilder.DrawText(titleText[i], titleX - 21, valueTextY[i], this.width, this.height, monTitleColor, this.monFontSize);
+                                bitmapBuilder.DrawText(titleText[i], titleX - 18, valueTextY[i], this.width, this.height, monTitleColor, this.monFontSize);
                                 bitmapBuilder.DrawText(valueText, titleX + 6, valueTextY[i], this.width, this.height, this.GetColorByLevel(curLevel[i], maxLevel[i], monValueColor), this.monFontSize);
                                 bitmapBuilder.DrawText(unitText[i], titleX + 23, valueTextY[i] + unitY, this.width, this.height, unitColor, this.unitFontSize);
                             }
