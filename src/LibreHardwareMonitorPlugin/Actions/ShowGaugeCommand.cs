@@ -27,47 +27,47 @@
             AddParameter(LibreHardwareMonitorGaugeType.VirtualMemory, "Virtual Memory", this.GroupName);
             AddParameter(LibreHardwareMonitorGaugeType.GPUMemory, "GPU Memory", this.GroupName);
 
-            AddParameter(LibreHardwareMonitorGaugeType.Storage1T, "Storage Temperature 1", GroupStorage);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage2T, "Storage Temperature 2", GroupStorage);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage3T, "Storage Temperature 3", GroupStorage);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage4T, "Storage Temperature 4", GroupStorage);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage5T, "Storage Temperature 5", GroupStorage);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage6T, "Storage Temperature 6", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageT1, "Storage Temperature 1", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageT2, "Storage Temperature 2", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageT3, "Storage Temperature 3", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageT4, "Storage Temperature 4", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageT5, "Storage Temperature 5", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageT6, "Storage Temperature 6", GroupStorage);
 
-            AddParameter(LibreHardwareMonitorGaugeType.Storage1U, "Storage Usage 1", GroupStorage);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage2U, "Storage Usage 2", GroupStorage);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage3U, "Storage Usage 3", GroupStorage);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage4U, "Storage Usage 4", GroupStorage);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage5U, "Storage Usage 5", GroupStorage);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage6U, "Storage Usage 6", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageU1, "Storage Usage 1", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageU2, "Storage Usage 2", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageU3, "Storage Usage 3", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageU4, "Storage Usage 4", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageU5, "Storage Usage 5", GroupStorage);
+            AddParameter(LibreHardwareMonitorGaugeType.StorageU6, "Storage Usage 6", GroupStorage);
 
             AddParameter(LibreHardwareMonitorGaugeType.Battery, "Battery", this.GroupName);
 
-            AddParameter(LibreHardwareMonitorGaugeType.CPUMonitor, "CPU", GroupMonitor);
-            AddParameter(LibreHardwareMonitorGaugeType.GPUMonitor, "GPU", GroupMonitor);
-            AddParameter(LibreHardwareMonitorGaugeType.MemoryLoadMonitor, "Memory Load", GroupMonitor);
-            AddParameter(LibreHardwareMonitorGaugeType.MemoryMonitor, "Memory", GroupMonitor);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage1TMonitor, "Storage Temperature 1", GroupMonitor);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage2TMonitor, "Storage Temperature 2", GroupMonitor);
-            AddParameter(LibreHardwareMonitorGaugeType.Storage1UMonitor, "Storage Usage 1", GroupMonitor);
-            AddParameter(LibreHardwareMonitorGaugeType.StorageUMonitor, "Storage Usage 2", GroupMonitor);
+            AddParameter(LibreHardwareMonitorGaugeType.MonCPU, "CPU", GroupMonitor);
+            AddParameter(LibreHardwareMonitorGaugeType.MonGPU, "GPU", GroupMonitor);
+            AddParameter(LibreHardwareMonitorGaugeType.MonMemoryLoad, "Memory Load", GroupMonitor);
+            AddParameter(LibreHardwareMonitorGaugeType.MonMemory, "Memory", GroupMonitor);
+            AddParameter(LibreHardwareMonitorGaugeType.MonStorageTG1, "Storage Temperature G1", GroupMonitor);
+            AddParameter(LibreHardwareMonitorGaugeType.MonStorageTG2, "Storage Temperature G2", GroupMonitor);
+            AddParameter(LibreHardwareMonitorGaugeType.MonStorageUG1, "Storage Usage G1", GroupMonitor);
+            AddParameter(LibreHardwareMonitorGaugeType.MonStorageUG2, "Storage Usage G2", GroupMonitor);
 
             void AddParameter(LibreHardwareMonitorGaugeType gaugeType, String displayName, String GroupName) => this.AddParameter(gaugeType.ToString(), displayName, GroupName);
 
             // Rectangle: x, y , width, height
             this.frOutline = new Int32[4] { 0, 0, 78, 78 }; // 80x80
-            this.frMiddle = new Int32[4] { this.frOutline[0] + 8, this.frOutline[1] + 8 * 2 + 3, this.frOutline[2] - 8 * 2, this.frOutline[3] - 8 * 3 };
+            this.middleSqureCoordinates = new Int32[4] { this.frOutline[0] + 8, this.frOutline[1] + 8 * 2 + 3, this.frOutline[2] - 8 * 2, this.frOutline[3] - 8 * 3 };
 
             // Line: x1, y1, x2, y2
             var offset = 0;
-            this.LeftLine = new Int32[4] { this.frMiddle[0] - offset, this.frMiddle[1], this.frMiddle[0] - offset, this.frMiddle[1] + this.frMiddle[3] };
-            this.RightLine = new Int32[4] { this.frMiddle[0] + this.frMiddle[2] + offset, this.frMiddle[1], this.frMiddle[0] + this.frMiddle[2] + offset, this.frMiddle[1] + this.frMiddle[3] };
-            this.TopLine = new Int32[4] { this.frMiddle[0], this.frMiddle[1] - offset, this.frMiddle[0] + this.frMiddle[2], this.frMiddle[1] - offset };
-            this.BottomLine = new Int32[4] { this.frMiddle[0], this.frMiddle[1] + this.frMiddle[3] + offset, this.frMiddle[0] + this.frMiddle[2], this.frMiddle[1] + this.frMiddle[3] + offset };
+            this.LeftLine = new Int32[4] { this.middleSqureCoordinates[0] - offset, this.middleSqureCoordinates[1], this.middleSqureCoordinates[0] - offset, this.middleSqureCoordinates[1] + this.middleSqureCoordinates[3] };
+            this.RightLine = new Int32[4] { this.middleSqureCoordinates[0] + this.middleSqureCoordinates[2] + offset, this.middleSqureCoordinates[1], this.middleSqureCoordinates[0] + this.middleSqureCoordinates[2] + offset, this.middleSqureCoordinates[1] + this.middleSqureCoordinates[3] };
+            this.TopLine = new Int32[4] { this.middleSqureCoordinates[0], this.middleSqureCoordinates[1] - offset, this.middleSqureCoordinates[0] + this.middleSqureCoordinates[2], this.middleSqureCoordinates[1] - offset };
+            this.BottomLine = new Int32[4] { this.middleSqureCoordinates[0], this.middleSqureCoordinates[1] + this.middleSqureCoordinates[3] + offset, this.middleSqureCoordinates[0] + this.middleSqureCoordinates[2], this.middleSqureCoordinates[1] + this.middleSqureCoordinates[3] + offset };
         }
 
         private readonly Int32[] frOutline;
-        private readonly Int32[] frMiddle;
+        private readonly Int32[] middleSqureCoordinates;
         private readonly Int32[] LeftLine;
         private readonly Int32[] RightLine;
         private readonly Int32[] TopLine;
@@ -111,6 +111,7 @@
         private readonly Single[] _lastLevel = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
         private readonly Single[] _lastMinLevels = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
         private readonly Single[] _lastMaxLevel = new Single[(Int32)LibreHardwareMonitorGaugeType.Count];
+        private Object x;
 
         private Int32 GetImageIndex(LibreHardwareMonitorGaugeType guageType) => Helpers.MinMax(((Int32)this._lastLevel[(Int32)guageType] + 6) / 7, 0, 15);
         private Int32 GetImageIndexMax(LibreHardwareMonitorGaugeType guageType) => (Int32)Helpers.MinMax((100 * this._lastLevel[(Int32)guageType] / this._lastMaxLevel[(Int32)guageType] + 6) / 7, 0, 15);
@@ -120,87 +121,118 @@
         private BitmapColor GetColorByLevel(Single level, Single maxLevel, Int32 baseValue) => this.GetColorByLevel(level, maxLevel, baseValue, BitmapColor.White);
         private BitmapColor GetColorByLevel(Single level, Single maxLevel, BitmapColor accentColor) => this.GetColorByLevel(level, maxLevel, 200, accentColor);
 
+        private Int32 GetAlpha(Int32 rate) => rate * 255 / 100;
+
         private void DrawGuage(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor, Int32 barCount)
         {
             bitmapBuilder.Clear(BitmapColor.Black);
 
-            var alpha = 70 * 2.55f;
-            var color = new BitmapColor(accentColor, (Int32)alpha);
-            bitmapBuilder.FillRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[1] + 15, color);
-            alpha = 15 * 2.55f;
-            color = new BitmapColor(accentColor, (Int32)alpha);
-            bitmapBuilder.FillRectangle(this.frOutline[0], this.frOutline[1] + 17, this.frOutline[2], this.frOutline[3], color);
-
-            alpha = 70 * 2.55f;
-            this.DrawOutline(bitmapBuilder, curLevel, maxLevel, new BitmapColor(accentColor, (Int32)alpha));
-
-            bitmapBuilder.DrawRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[3], accentColor);
-            bitmapBuilder.FillRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2], this.frMiddle[3], BitmapColor.Black);
+            var color1 = new BitmapColor(accentColor, this.GetAlpha(70));
+            var color2 = new BitmapColor(color1, this.GetAlpha(15));
+            bitmapBuilder.FillRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[1] + 15, color1);
+            bitmapBuilder.FillRectangle(this.frOutline[0], this.frOutline[1] + 17, this.frOutline[2], this.frOutline[3], color2);
+            bitmapBuilder.DrawRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[3], color1);
+            this.DrawOutline(bitmapBuilder, curLevel, maxLevel, color1, color1);
 
             if (barCount == 2)
             {
-                this.DrawBar2(bitmapBuilder, curLevel, maxLevel, accentColor, 100, 125);
+                var leftBarColor = new BitmapColor(accentColor, this.GetAlpha(40));
+                var rightBarColor = new BitmapColor(accentColor, this.GetAlpha(30));
+                var leftLineColor = new BitmapColor(accentColor, this.GetAlpha(60));
+                var rightLineColor = new BitmapColor(accentColor, this.GetAlpha(50));
+                this.DrawBar2(bitmapBuilder, curLevel, maxLevel, leftBarColor, rightBarColor, leftLineColor, rightLineColor);
             }
             else
             {
-                this.DrawBar1(bitmapBuilder, curLevel, maxLevel, accentColor, 100);
+                var barColor = new BitmapColor(accentColor, this.GetAlpha(40));
+                var lineColor = new BitmapColor(accentColor, this.GetAlpha(60));
+                this.DrawBar1(bitmapBuilder, curLevel, maxLevel, barColor, lineColor);
             }
         }
 
-        private void DrawBar1(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor, Int32 alpha)
+        private void DrawBar1(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor barColor, BitmapColor lineColor)
         {
-            Single width = this.frMiddle[2] - 3;
-            Single height = this.frMiddle[3] - 4;
-            Single x1 = this.frMiddle[0] + 2;
-            Single y1 = this.frMiddle[1] + 2;
-            var y2 = y1 + height;
+            var x = this.middleSqureCoordinates[0] + 2;
+            var y = this.middleSqureCoordinates[1] + 2;
+            var w = this.middleSqureCoordinates[2] - 3;
+            var h = this.middleSqureCoordinates[3] - 4;
 
-            var level = curLevel[0] / maxLevel[0];
-            var lh = height * level;
-            var ly = 1 + y2 - lh;
+            this.GetRectangleYHByLevel(curLevel[0] / maxLevel[0], y, h, out var bottomY, out var bottomH);
 
-            bitmapBuilder.FillRectangle((Int32)x1, (Int32)ly, (Int32)width, (Int32)lh, new BitmapColor(accentColor, alpha));
-            bitmapBuilder.DrawRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2], this.frMiddle[3], accentColor);
+            bitmapBuilder.FillRectangle(this.middleSqureCoordinates[0],
+                                        this.middleSqureCoordinates[1],
+                                        this.middleSqureCoordinates[2],
+                                        this.middleSqureCoordinates[3],
+                                        BitmapColor.Black);
+            bitmapBuilder.FillRectangle(x, (Int32)bottomY, w, (Int32)bottomH, barColor);
+            bitmapBuilder.DrawRectangle(this.middleSqureCoordinates[0],
+                                        this.middleSqureCoordinates[1],
+                                        this.middleSqureCoordinates[2],
+                                        this.middleSqureCoordinates[3],
+                                        lineColor);
         }
 
-        private void DrawBar2(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor, Int32 alpha1, Int32 alpha2)
+        private void DrawBar2(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor leftBarColor, BitmapColor rightBarColor, BitmapColor leftLineColor, BitmapColor rightLineColor)
         {
-            var width = this.frMiddle[2] * 0.5f - 4;
-            Single height = this.frMiddle[3] - 4;
-            Single x1 = this.frMiddle[0] + 2;
-            Single y1 = this.frMiddle[1] + 2;
-            var y2 = y1 + height;
+            var x = this.middleSqureCoordinates[0] + 2;
+            var y = this.middleSqureCoordinates[1] + 2;
+            var w = this.middleSqureCoordinates[2] / 2 - 4;
+            var h = this.middleSqureCoordinates[3] - 4;
 
-            var level = curLevel[0] / maxLevel[0];
-            var frH = height * level;
-            var frY = 1 + y2 - frH;
+            var lx = this.middleSqureCoordinates[0];
+            var ly = this.middleSqureCoordinates[1];
+            var lw = this.middleSqureCoordinates[2] / 2 - 1;
+            var lh = this.middleSqureCoordinates[3];
 
-            bitmapBuilder.FillRectangle((Int32)x1, (Int32)frY, (Int32)width, (Int32)frH, new BitmapColor(accentColor, alpha1));
-            bitmapBuilder.DrawRectangle(this.frMiddle[0], this.frMiddle[1], this.frMiddle[2] / 2 - 1, this.frMiddle[3], accentColor);
+            bitmapBuilder.FillRectangle(this.middleSqureCoordinates[0],
+                                        this.middleSqureCoordinates[1],
+                                        this.middleSqureCoordinates[2],
+                                        this.middleSqureCoordinates[3],
+                                        BitmapColor.Black);
+            // left
+            this.GetRectangleYHByLevel(curLevel[0] / maxLevel[0], y, h, out var bottomY, out var bottomH);
+            bitmapBuilder.FillRectangle(x, bottomY, w, bottomH, leftBarColor);
+            bitmapBuilder.DrawRectangle(lx, ly, lw, lh, leftLineColor);
 
-            level = curLevel[1] / maxLevel[1];
-            frH = height * level;
-            frY = 1 + y2 - frH;
-
-            bitmapBuilder.FillRectangle((Int32)(x1 + width + 5), (Int32)frY, (Int32)width, (Int32)frH, new BitmapColor(accentColor, alpha2));
-            bitmapBuilder.DrawRectangle((Int32)(this.frMiddle[0] + width + 5), this.frMiddle[1], this.frMiddle[2] / 2 - 1, this.frMiddle[3], accentColor);
+            // right
+            this.GetRectangleYHByLevel(curLevel[1] / maxLevel[1], y, h, out bottomY, out bottomH);
+            bitmapBuilder.FillRectangle(x + w + 5, bottomY, w, bottomH, rightBarColor);
+            bitmapBuilder.DrawRectangle(lx + w + 5, ly, lw, lh, rightLineColor);
         }
 
-        private void DrawOutline(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor color)
+        private void GetRectangleYHByLevel(Single level, Int32 y, Int32 height, out Int32 bottomY, out Int32 bottomH)
         {
-            // Left Line
-            var level = curLevel[0] / maxLevel[0];
-            var middlePoint = this.LeftLine[1] + (this.LeftLine[3] - this.LeftLine[1]) / 2;
-            var startPoint = middlePoint - (this.LeftLine[3] - this.LeftLine[1]) * level / 2;
-            var endPoint = middlePoint + (this.LeftLine[3] - this.LeftLine[1]) * level / 2 + 1;
-            bitmapBuilder.DrawLine(this.LeftLine[0] - 3, startPoint, this.LeftLine[2] - 3, endPoint, color, 4);
+            // y1 = y2 - height;
+            // y2 = y1 + height;
+            bottomH = (Int32)(height * level);
+            bottomY = height + y - bottomH + 1;
+        }
+        private void GetLineY1Y2ByLevel(Single level, Int32 y1, Int32 y2, out Int32 middleY1, out Int32 middleY2)
+        {
+            var halfHeight = (y2 - y1) / 2;
+            var middleY = y1 + halfHeight;
+            var levelH = halfHeight * level;
+            middleY1 = (Int32)(middleY - levelH);
+            middleY2 = (Int32)(middleY + levelH + 1);
+        }
 
-            // Right Line
-            //level = curLevel[1] / maxLevel[1];
-            middlePoint = this.RightLine[1] + (this.RightLine[3] - this.RightLine[1]) / 2;
-            startPoint = middlePoint - (this.RightLine[3] - this.RightLine[1]) * level / 2;
-            endPoint = middlePoint + (this.RightLine[3] - this.RightLine[1]) * level / 2 + 1;
-            bitmapBuilder.DrawLine(this.RightLine[0] + 4, startPoint, this.RightLine[2] + 4, endPoint, color, 4);
+        private void DrawOutline(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor leftColor, BitmapColor rightColor)
+        {
+            // Left Line: x1, y1, x2, y2
+            var lx1 = this.LeftLine[0] - 3;
+            var ly1 = this.LeftLine[1];
+            var lx2 = this.LeftLine[2] - 3;
+            var ly2 = this.LeftLine[3];
+            this.GetLineY1Y2ByLevel(curLevel[0] / maxLevel[0], ly1, ly2, out var middleLY1, out var middleLY2);
+            bitmapBuilder.DrawLine(lx1, middleLY1, lx2, middleLY2, leftColor, 4);
+
+            // Right Line: x1, y1, x2, y2
+            var rx1 = this.RightLine[0] + 4;
+            var ry1 = this.RightLine[1];
+            var rx2 = this.RightLine[2] + 4;
+            var ry2 = this.RightLine[3];
+            this.GetLineY1Y2ByLevel(curLevel[1] / maxLevel[1], ry1, ry2, out var middleRY1, out var middleRY2);
+            bitmapBuilder.DrawLine(rx1, middleRY1, rx2, middleRY2, rightColor, 4);
         }
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
@@ -223,9 +255,9 @@
 
             using (var bitmapBuilder = new BitmapBuilder(PluginImageSize.Width90))
             {
-                var accentColor = (gaugeType == LibreHardwareMonitorGaugeType.MemoryMonitor
-                                   || gaugeType == LibreHardwareMonitorGaugeType.MemoryLoadMonitor) ? new BitmapColor(253, 100, 150) : sensor.Color;
-                var titleColor = BitmapColor.White;
+                var accentColor = (gaugeType == LibreHardwareMonitorGaugeType.MonMemory
+                                   || gaugeType == LibreHardwareMonitorGaugeType.MonMemoryLoad) ? new BitmapColor(253, 100, 150) : sensor.Color;
+                var titleColor = BitmapColor.Black;
                 var valueColor = BitmapColor.White;
                 var unitColor = accentColor;
                 var monTitleColor = accentColor;
@@ -243,7 +275,7 @@
                 var unitText = new String[3];
                 var unitX = 20;
                 var unitY = 3;
-                
+
                 String valueText;
                 var valueTextY = new[] { 6 + 16 * 1, 6 + 16 * 2, 6 + 16 * 3, 6 + 16 * 4 };
                 var valueTextY2 = new[] { 6 + 22 * 1, 6 + 22 * 2 };
@@ -414,24 +446,24 @@
                         break;
 
                     // Storages
-                    case LibreHardwareMonitorGaugeType.Storage1T:
-                    case LibreHardwareMonitorGaugeType.Storage2T:
-                    case LibreHardwareMonitorGaugeType.Storage3T:
-                    case LibreHardwareMonitorGaugeType.Storage4T:
-                    case LibreHardwareMonitorGaugeType.Storage5T:
-                    case LibreHardwareMonitorGaugeType.Storage6T:
+                    case LibreHardwareMonitorGaugeType.StorageT1:
+                    case LibreHardwareMonitorGaugeType.StorageT2:
+                    case LibreHardwareMonitorGaugeType.StorageT3:
+                    case LibreHardwareMonitorGaugeType.StorageT4:
+                    case LibreHardwareMonitorGaugeType.StorageT5:
+                    case LibreHardwareMonitorGaugeType.StorageT6:
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
                         bitmapBuilder.DrawText($"{gaugeType}", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N0}", titleX - 1, valueTextY[1], this.width, this.height, valueColor, this.fontSize);
                         bitmapBuilder.DrawText("℃", unitX, valueTextY[1] + unitY, this.width, this.height, unitColor, this.unitFontSize);
                         break;
 
-                    case LibreHardwareMonitorGaugeType.Storage1U:
-                    case LibreHardwareMonitorGaugeType.Storage2U:
-                    case LibreHardwareMonitorGaugeType.Storage3U:
-                    case LibreHardwareMonitorGaugeType.Storage4U:
-                    case LibreHardwareMonitorGaugeType.Storage5U:
-                    case LibreHardwareMonitorGaugeType.Storage6U:
+                    case LibreHardwareMonitorGaugeType.StorageU1:
+                    case LibreHardwareMonitorGaugeType.StorageU2:
+                    case LibreHardwareMonitorGaugeType.StorageU3:
+                    case LibreHardwareMonitorGaugeType.StorageU4:
+                    case LibreHardwareMonitorGaugeType.StorageU5:
+                    case LibreHardwareMonitorGaugeType.StorageU6:
                         this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
                         bitmapBuilder.DrawText($"{gaugeType}", titleX, titleY, this.width, this.height, titleColor, this.titleFontSize);
                         bitmapBuilder.DrawText($"{curLevel[0]:N1}", titleX - 1, valueTextY[1], this.width, this.height, valueColor, this.fontSize);
@@ -439,7 +471,7 @@
                         break;
 
                     // Monitors
-                    case LibreHardwareMonitorGaugeType.CPUMonitor:
+                    case LibreHardwareMonitorGaugeType.MonCPU:
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.CPULoad;
                         guageType[1] = (Int32)LibreHardwareMonitorGaugeType.CPUCore;
                         guageType[2] = (Int32)LibreHardwareMonitorGaugeType.CPUPower;
@@ -467,7 +499,7 @@
                         }
                         break;
 
-                    case LibreHardwareMonitorGaugeType.GPUMonitor:
+                    case LibreHardwareMonitorGaugeType.MonGPU:
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.GPULoad;
                         guageType[1] = (Int32)LibreHardwareMonitorGaugeType.GPUCore;
                         guageType[2] = (Int32)LibreHardwareMonitorGaugeType.GPUPower;
@@ -495,7 +527,7 @@
                         }
                         break;
 
-                    case LibreHardwareMonitorGaugeType.MemoryLoadMonitor:
+                    case LibreHardwareMonitorGaugeType.MonMemoryLoad:
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.MemoryLoad;
                         guageType[1] = (Int32)LibreHardwareMonitorGaugeType.VirtualMemoryLoad;
                         guageType[2] = (Int32)LibreHardwareMonitorGaugeType.GPUMemoryLoad;
@@ -523,7 +555,7 @@
                         }
                         break;
 
-                    case LibreHardwareMonitorGaugeType.MemoryMonitor:
+                    case LibreHardwareMonitorGaugeType.MonMemory:
                         guageType[0] = (Int32)LibreHardwareMonitorGaugeType.MemoryLoad;
                         guageType[1] = (Int32)LibreHardwareMonitorGaugeType.VirtualMemoryLoad;
                         guageType[2] = (Int32)LibreHardwareMonitorGaugeType.GPUMemoryLoad;
@@ -554,10 +586,10 @@
                         }
                         break;
 
-                    case LibreHardwareMonitorGaugeType.Storage1TMonitor:
+                    case LibreHardwareMonitorGaugeType.MonStorageTG1:
                         for (i = 0; i < 3; i++)
                         {
-                            guageType[i] = (Int32)LibreHardwareMonitorGaugeType.Storage1T + i;
+                            guageType[i] = (Int32)LibreHardwareMonitorGaugeType.StorageT1 + i;
                             titleText[i] = $"[{i + 1}]";
                             unitText[i] = "℃";
 
@@ -578,10 +610,10 @@
                         }
                         break;
 
-                    case LibreHardwareMonitorGaugeType.Storage2TMonitor:
+                    case LibreHardwareMonitorGaugeType.MonStorageTG2:
                         for (i = 0; i < 3; i++)
                         {
-                            guageType[i] = (Int32)LibreHardwareMonitorGaugeType.Storage4T + i;
+                            guageType[i] = (Int32)LibreHardwareMonitorGaugeType.StorageT4 + i;
                             titleText[i] = $"[{i + 4}]";
                             unitText[i] = "℃";
 
@@ -602,10 +634,10 @@
                         }
                         break;
 
-                    case LibreHardwareMonitorGaugeType.Storage1UMonitor:
+                    case LibreHardwareMonitorGaugeType.MonStorageUG1:
                         for (i = 0; i < 3; i++)
                         {
-                            guageType[i] = (Int32)LibreHardwareMonitorGaugeType.Storage1U + i;
+                            guageType[i] = (Int32)LibreHardwareMonitorGaugeType.StorageU1 + i;
                             titleText[i] = $"[{i + 1}]";
                             unitText[i] = "%";
 
@@ -626,10 +658,10 @@
                         }
                         break;
 
-                    case LibreHardwareMonitorGaugeType.StorageUMonitor:
+                    case LibreHardwareMonitorGaugeType.MonStorageUG2:
                         for (i = 0; i < 3; i++)
                         {
-                            guageType[i] = (Int32)LibreHardwareMonitorGaugeType.Storage4U + i;
+                            guageType[i] = (Int32)LibreHardwareMonitorGaugeType.StorageU4 + i;
                             titleText[i] = $"[{i + 4}]";
                             unitText[i] = "%";
 
@@ -703,28 +735,28 @@
             this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.VirtualMemory);
             this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.GPUMemory);
 
-            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Storage1T);
-            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Storage2T);
-            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Storage3T);
-            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Storage4T);
-            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Storage5T);
+            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.StorageT1);
+            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.StorageT2);
+            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.StorageT3);
+            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.StorageT4);
+            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.StorageT5);
 
-            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Storage1U);
-            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Storage2U);
-            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Storage3U);
-            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Storage4U);
-            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Storage5U);
+            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.StorageU1);
+            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.StorageU2);
+            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.StorageU3);
+            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.StorageU4);
+            this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.StorageU5);
 
             this.UpdateGaugeIndex(LibreHardwareMonitorGaugeType.Battery);
 
-            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.CPUMonitor);
-            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.GPUMonitor);
-            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.MemoryLoadMonitor);
-            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.MemoryMonitor);
-            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.Storage1TMonitor);
-            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.Storage2TMonitor);
-            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.Storage1UMonitor);
-            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.StorageUMonitor);
+            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.MonCPU);
+            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.MonGPU);
+            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.MonMemoryLoad);
+            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.MonMemory);
+            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.MonStorageTG1);
+            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.MonStorageTG2);
+            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.MonStorageUG1);
+            this.UpdateMonitorIndex(LibreHardwareMonitorGaugeType.MonStorageUG2);
 
             this.ActionImageChanged(null);
         }
