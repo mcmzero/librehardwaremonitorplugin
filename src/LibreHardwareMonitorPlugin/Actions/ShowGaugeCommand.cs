@@ -101,7 +101,7 @@
 
         private readonly Single[] _lastMonLevel = new Single[(Int32)LHMGaugeType.Count];
         private readonly Single[] _lastLevel = new Single[(Int32)LHMGaugeType.Count];
-        private readonly Single[] _lastMinLevels = new Single[(Int32)LHMGaugeType.Count];
+        private readonly Single[] _lastMinLevel = new Single[(Int32)LHMGaugeType.Count];
         private readonly Single[] _lastMaxLevel = new Single[(Int32)LHMGaugeType.Count];
 
         private BitmapColor GetColorByLevel(Single level, Single maxLevel, Int32 baseValue, BitmapColor accentColor) => new BitmapColor(level / maxLevel > 0.9 ? new BitmapColor(255, 30, 30) : accentColor, Helpers.MinMax((Int32)(baseValue + (255 - baseValue) * level / maxLevel), 0, 255));
@@ -413,7 +413,7 @@
                         for (i = 0; i < 3; i++)
                         {
                             maxLevel[i] = this._lastMaxLevel[monType[i]];
-                            curLevel[i] = this._lastLevel[monType[i]];
+                            curLevel[i] = this._lastMonLevel[monType[i]];
                         }
                         displayName = gaugeType == LHMGaugeType.Monitor_CPU ? "CPU Monitor" : "GPU Monitor";
                         DrawGuage1(displayName);
@@ -438,7 +438,7 @@
                         for (i = 0; i < 3; i++)
                         {
                             maxLevel[i] = this._lastMaxLevel[monType[i]];
-                            curLevel[i] = this._lastLevel[monType[i]];
+                            curLevel[i] = this._lastMonLevel[monType[i]];
                         }
                         displayName = "Memory Load";
                         DrawGuage1(displayName);
@@ -446,8 +446,6 @@
                         unitText = new[] { "%", "%", "%" };
                         for (i = 0; i < 3; i++)
                         {
-                            maxLevel[i] = this._lastMaxLevel[monType[i]];
-                            curLevel[i] = this._lastMonLevel[monType[i]];
                             valueText = $"{curLevel[i]:N1}";
                             bitmapBuilder.DrawText(titleText[i], titleX[1], valueY1[i], width, height, monTitleColor, monFontSize);
                             bitmapBuilder.DrawText(valueText, valueX[3], valueY1[i], width, height, this.GetColorByLevel(curLevel[i], maxLevel[i], monValueColor), monFontSize);
@@ -603,7 +601,7 @@
             if (!this._lastLevel[(Int32)gaugeType].Equals(sensor.Value))
             {
                 this._lastLevel[(Int32)gaugeType] = sensor.Value;
-                this._lastMinLevels[(Int32)gaugeType] = sensor.MinValue;
+                this._lastMinLevel[(Int32)gaugeType] = sensor.MinValue;
                 this._lastMaxLevel[(Int32)gaugeType] = sensor.MaxValue;
                 return true;
             }
@@ -622,8 +620,9 @@
             {
                 if (!this._lastMonLevel[(Int32)sensor.GaugeType].Equals(sensor.Value))
                 {
+                    //PluginLog.Info($"{sensor.GaugeType}: " + sensor.Value);
                     this._lastMonLevel[(Int32)sensor.GaugeType] = sensor.Value;
-                    this._lastMinLevels[(Int32)sensor.GaugeType] = sensor.MinValue;
+                    this._lastMinLevel[(Int32)sensor.GaugeType] = sensor.MinValue;
                     this._lastMaxLevel[(Int32)sensor.GaugeType] = sensor.MaxValue;
                     ret = true;
                 }
