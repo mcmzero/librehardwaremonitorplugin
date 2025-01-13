@@ -413,7 +413,8 @@
                                                 gaugeType = LHMGaugeType.GPU_Load;
                                                 monitorType = LHMGaugeType.Monitor_GPU;
                                             }
-                                            else if (identifier.IndexOf("/load/3", StringComparison.OrdinalIgnoreCase) != -1)
+                                            else if (identifier.IndexOf("/load/3", StringComparison.OrdinalIgnoreCase) != -1
+                                                    && displayName.IndexOf("Memory", StringComparison.OrdinalIgnoreCase) != -1)
                                             {
                                                 gaugeType = LHMGaugeType.GPU_Memory_Load;
                                                 monitorType = LHMGaugeType.Monitor_Memory_Load;
