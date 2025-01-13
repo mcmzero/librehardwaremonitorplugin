@@ -6,10 +6,10 @@
 
     public class LibreHardwareMonitorGaugeValueChangedEventArgs : EventArgs
     {
-        private readonly LibreHardwareMonitorGaugeType[] _modifiedGaugeTypes;
+        private readonly LHMGaugeType[] _modifiedGaugeTypes;
 
-        public IEnumerable<LibreHardwareMonitorGaugeType> GaugeTypes => this._modifiedGaugeTypes;
+        public IEnumerable<LHMGaugeType> GaugeTypes => this._modifiedGaugeTypes;
 
-        internal LibreHardwareMonitorGaugeValueChangedEventArgs(IEnumerable<LibreHardwareMonitorGaugeType> modifiedGaugeTypes) => this._modifiedGaugeTypes = modifiedGaugeTypes.ToArray();
+        internal LibreHardwareMonitorGaugeValueChangedEventArgs(IEnumerable<LHMGaugeType> modifiedGaugeTypes) => this._modifiedGaugeTypes = modifiedGaugeTypes.ToArray();
     }
 }

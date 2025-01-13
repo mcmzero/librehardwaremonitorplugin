@@ -6,10 +6,10 @@
 
     public class LibreHardwareMonitorMonitorValueChangedEventArgs : EventArgs
     {
-        private readonly LibreHardwareMonitorGaugeType[] _modifiedMonitorTypes;
+        private readonly LHMGaugeType[] _modifiedMonitorTypes;
 
-        public IEnumerable<LibreHardwareMonitorGaugeType> MonitorTypes => this._modifiedMonitorTypes;
+        public IEnumerable<LHMGaugeType> MonitorTypes => this._modifiedMonitorTypes;
 
-        public LibreHardwareMonitorMonitorValueChangedEventArgs(IEnumerable<LibreHardwareMonitorGaugeType> modifiedMonitorTypes) => this._modifiedMonitorTypes = modifiedMonitorTypes.ToArray();
+        public LibreHardwareMonitorMonitorValueChangedEventArgs(IEnumerable<LHMGaugeType> modifiedMonitorTypes) => this._modifiedMonitorTypes = modifiedMonitorTypes.ToArray();
     }
 }

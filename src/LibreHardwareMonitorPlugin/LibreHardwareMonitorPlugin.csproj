@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="Actions\HardwareMonitorControlCenter.cs" />
     <Compile Include="Actions\PluginHelpers.cs" />
-    <Compile Include="LibreHardwareMonitor\LibreHardwareMonitorGaugeType.cs" />
+    <Compile Include="LibreHardwareMonitor\LHMGaugeType.cs" />
     <Compile Include="Actions\OpenApplicationCommand.cs" />
     <Compile Include="Actions\ShowGaugeCommand.cs" />
     <Compile Include="Actions\ShowSensorCommand.cs" />

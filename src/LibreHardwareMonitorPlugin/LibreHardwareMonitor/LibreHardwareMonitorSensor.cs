@@ -20,8 +20,8 @@
 
         public String FormatString { get; }
 
-        public LibreHardwareMonitorGaugeType GaugeType { get; }
-        public LibreHardwareMonitorGaugeType MonitorType { get; }
+        public LHMGaugeType GaugeType { get; }
+        public LHMGaugeType MonitorType { get; }
 
         public Single Value { get; private set; }
         public Single MinValue { get; private set; }
@@ -32,7 +32,7 @@
         public BitmapColor GetColor() => this.Color;
         public BitmapColor SetColor(BitmapColor color) => this.Color = color;
 
-        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LibreHardwareMonitorGaugeType gaugeType, LibreHardwareMonitorGaugeType monitorType)
+        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LHMGaugeType gaugeType, LHMGaugeType monitorType)
         {
             this.Id = LibreHardwareMonitorSensor.CreateSensorId(instanceId, identifier);
 
@@ -48,7 +48,7 @@
             this.MonitorType = monitorType;
         }
 
-        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LibreHardwareMonitorGaugeType gaugeType, LibreHardwareMonitorGaugeType monitorType, BitmapColor color)
+        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LHMGaugeType gaugeType, LHMGaugeType monitorType, BitmapColor color)
         {
             this.Id = LibreHardwareMonitorSensor.CreateSensorId(instanceId, identifier);
 

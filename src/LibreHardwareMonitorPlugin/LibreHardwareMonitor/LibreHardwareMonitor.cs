@@ -129,8 +129,8 @@
 
         private readonly Dictionary<String, LibreHardwareMonitorSensor> _sensorsByName = new Dictionary<String, LibreHardwareMonitorSensor>(StringComparer.InvariantCultureIgnoreCase);
         private readonly Dictionary<String, LibreHardwareMonitorSensor> _sensorsById = new Dictionary<String, LibreHardwareMonitorSensor>(StringComparer.InvariantCultureIgnoreCase);
-        private readonly Dictionary<LibreHardwareMonitorGaugeType, LibreHardwareMonitorSensor> _sensorsByGaugeType = new Dictionary<LibreHardwareMonitorGaugeType, LibreHardwareMonitorSensor>();
-        private readonly Dictionary<LibreHardwareMonitorGaugeType, List<LibreHardwareMonitorSensor>> _sensorListByGaugeType = new Dictionary<LibreHardwareMonitorGaugeType, List<LibreHardwareMonitorSensor>>();
+        private readonly Dictionary<LHMGaugeType, LibreHardwareMonitorSensor> _sensorsByGaugeType = new Dictionary<LHMGaugeType, LibreHardwareMonitorSensor>();
+        private readonly Dictionary<LHMGaugeType, List<LibreHardwareMonitorSensor>> _sensorListByGaugeType = new Dictionary<LHMGaugeType, List<LibreHardwareMonitorSensor>>();
 
         public IReadOnlyCollection<LibreHardwareMonitorSensor> Sensors => this._sensorsByName.Values;
 
@@ -159,13 +159,13 @@
             return this._sensorsById.TryGetValueSafe(sensorId, out sensor);
         }
 
-        public Boolean TryGetSensor(LibreHardwareMonitorGaugeType gaugeType, out LibreHardwareMonitorSensor sensor)
+        public Boolean TryGetSensor(LHMGaugeType gaugeType, out LibreHardwareMonitorSensor sensor)
         {
             sensor = null;
             return this._isRunning && this._sensorsByGaugeType.TryGetValueSafe(gaugeType, out sensor);
         }
 
-        public Boolean TryGetSensorList(LibreHardwareMonitorGaugeType gaugeType, out List<LibreHardwareMonitorSensor> sensorList)
+        public Boolean TryGetSensorList(LHMGaugeType gaugeType, out List<LibreHardwareMonitorSensor> sensorList)
         {
             sensorList = null;
             return this._isRunning && this._sensorListByGaugeType.TryGetValueSafe(gaugeType, out sensorList);
@@ -353,8 +353,8 @@
                                     var identifier = wmiSensor.GetIdentifier();
                                     PluginLog.Info("\t\tdisplayName: " + displayName + " | identifier:" + identifier);
 
-                                    var gaugeType = LibreHardwareMonitorGaugeType.None;
-                                    var monitorType = LibreHardwareMonitorGaugeType.None;
+                                    var gaugeType = LHMGaugeType.None;
+                                    var monitorType = LHMGaugeType.None;
 
                                     var sensorColor = defaultColor;
                                     if (identifier.IndexOf("cpu/", StringComparison.OrdinalIgnoreCase) != -1)
@@ -362,13 +362,13 @@
                                         sensorColor = cpuColor;
                                         if (identifier.IndexOf("/power/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.CPU_Power;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_CPU;
+                                            gaugeType = LHMGaugeType.CPU_Power;
+                                            monitorType = LHMGaugeType.Monitor_CPU;
                                         }
                                         else if (identifier.IndexOf("/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.CPU_Load;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_CPU;
+                                            gaugeType = LHMGaugeType.CPU_Load;
+                                            monitorType = LHMGaugeType.Monitor_CPU;
                                         }
                                         else if (identifier.IndexOf("/temperature", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
@@ -376,24 +376,24 @@
                                             {
                                                 if (identifier.IndexOf("/temperature/2", StringComparison.OrdinalIgnoreCase) != -1)
                                                 {
-                                                    gaugeType = LibreHardwareMonitorGaugeType.CPU_Package;   // Tctl / Tdie = package
+                                                    gaugeType = LHMGaugeType.CPU_Package;   // Tctl / Tdie = package
                                                 }
                                                 else if (identifier.IndexOf("/temperature/3", StringComparison.OrdinalIgnoreCase) != -1)
                                                 {
-                                                    gaugeType = LibreHardwareMonitorGaugeType.CPU_Core;      // AMD CPU CCD (Tdie) = core
-                                                    monitorType = LibreHardwareMonitorGaugeType.Mon_CPU;
+                                                    gaugeType = LHMGaugeType.CPU_Core;      // AMD CPU CCD (Tdie) = core
+                                                    monitorType = LHMGaugeType.Monitor_CPU;
                                                 }
                                             }
                                             else if (identifier.IndexOf("/intelcpu", StringComparison.OrdinalIgnoreCase) != -1)
                                             {
                                                 if (identifier.IndexOf("/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                                 {
-                                                    gaugeType = LibreHardwareMonitorGaugeType.CPU_Core;
-                                                    monitorType = LibreHardwareMonitorGaugeType.Mon_CPU;
+                                                    gaugeType = LHMGaugeType.CPU_Core;
+                                                    monitorType = LHMGaugeType.Monitor_CPU;
                                                 }
                                                 else if (identifier.IndexOf("/temperature/1", StringComparison.OrdinalIgnoreCase) != -1)
                                                 {
-                                                    gaugeType = LibreHardwareMonitorGaugeType.CPU_Package;
+                                                    gaugeType = LHMGaugeType.CPU_Package;
                                                 }
                                             }
                                         }
@@ -403,35 +403,35 @@
                                         sensorColor = gpuColor;
                                         if (identifier.IndexOf("/power/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.GPU_Power;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_GPU;
+                                            gaugeType = LHMGaugeType.GPU_Power;
+                                            monitorType = LHMGaugeType.Monitor_GPU;
                                         }
                                         else if (identifier.IndexOf("/load", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             if (identifier.IndexOf("/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                             {
-                                                gaugeType = LibreHardwareMonitorGaugeType.GPU_Load;
-                                                monitorType = LibreHardwareMonitorGaugeType.Mon_GPU;
+                                                gaugeType = LHMGaugeType.GPU_Load;
+                                                monitorType = LHMGaugeType.Monitor_GPU;
                                             }
                                             else if (identifier.IndexOf("/load/3", StringComparison.OrdinalIgnoreCase) != -1)
                                             {
-                                                gaugeType = LibreHardwareMonitorGaugeType.GPU_Memory_Load;
-                                                monitorType = LibreHardwareMonitorGaugeType.Mon_Memory_Load;
+                                                gaugeType = LHMGaugeType.GPU_Memory_Load;
+                                                monitorType = LHMGaugeType.Monitor_Memory_Load;
                                             }
                                         }
                                         else if (identifier.IndexOf("/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.GPU_Core;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_GPU;
+                                            gaugeType = LHMGaugeType.GPU_Core;
+                                            monitorType = LHMGaugeType.Monitor_GPU;
                                         }
                                         else if (identifier.IndexOf("/temperature/2", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.GPU_Hotspot;
+                                            gaugeType = LHMGaugeType.GPU_Hotspot;
                                         }
                                         else if (identifier.IndexOf("/smalldata/3", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.GPU_Memory;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Memory;
+                                            gaugeType = LHMGaugeType.GPU_Memory;
+                                            monitorType = LHMGaugeType.Monitor_Memory;
                                         }
                                     }
                                     else if (identifier.IndexOf("/ram/", StringComparison.OrdinalIgnoreCase) != -1)
@@ -439,23 +439,23 @@
                                         sensorColor = cpuColor;
                                         if (identifier.IndexOf("/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Memory_Load;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Memory_Load;
+                                            gaugeType = LHMGaugeType.Memory_Load;
+                                            monitorType = LHMGaugeType.Monitor_Memory_Load;
                                         }
                                         else if (identifier.IndexOf("/load/1", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Virtual_Memory_Load;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Memory_Load;
+                                            gaugeType = LHMGaugeType.Virtual_Memory_Load;
+                                            monitorType = LHMGaugeType.Monitor_Memory_Load;
                                         }
                                         else if (identifier.IndexOf("/data/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Memory;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Memory;
+                                            gaugeType = LHMGaugeType.Memory;
+                                            monitorType = LHMGaugeType.Monitor_Memory;
                                         }
                                         else if (identifier.IndexOf("/data/2", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Virtual_Memory;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Memory;
+                                            gaugeType = LHMGaugeType.Virtual_Memory;
+                                            monitorType = LHMGaugeType.Monitor_Memory;
                                         }
                                     }
                                     else if (identifier.IndexOf("/nvme/", StringComparison.OrdinalIgnoreCase) != -1)
@@ -463,63 +463,63 @@
                                         sensorColor = defaultColor;
                                         if (identifier.IndexOf("/0/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_1;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G1;
+                                            gaugeType = LHMGaugeType.Storage_T_1;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G1;
                                         }
                                         else if (identifier.IndexOf("/1/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_2;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G1;
+                                            gaugeType = LHMGaugeType.Storage_T_2;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G1;
                                         }
                                         else if (identifier.IndexOf("/2/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_3;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G1;
+                                            gaugeType = LHMGaugeType.Storage_T_3;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G1;
                                         }
                                         else if (identifier.IndexOf("/3/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_4;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G2;
+                                            gaugeType = LHMGaugeType.Storage_T_4;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G2;
                                         }
                                         else if (identifier.IndexOf("/4/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_4;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G2;
+                                            gaugeType = LHMGaugeType.Storage_T_4;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G2;
                                         }
                                         else if (identifier.IndexOf("/5/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_5;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G2;
+                                            gaugeType = LHMGaugeType.Storage_T_5;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G2;
                                         }
                                         else if (identifier.IndexOf("/0/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_1;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G1;
+                                            gaugeType = LHMGaugeType.Storage_U_1;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G1;
                                         }
                                         else if (identifier.IndexOf("/1/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_2;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G1;
+                                            gaugeType = LHMGaugeType.Storage_U_2;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G1;
                                         }
                                         else if (identifier.IndexOf("/2/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_3;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G1;
+                                            gaugeType = LHMGaugeType.Storage_U_3;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G1;
                                         }
                                         else if (identifier.IndexOf("/3/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_4;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G2;
+                                            gaugeType = LHMGaugeType.Storage_U_4;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G2;
                                         }
                                         else if (identifier.IndexOf("/4/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_4;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G2;
+                                            gaugeType = LHMGaugeType.Storage_U_4;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G2;
                                         }
                                         else if (identifier.IndexOf("/5/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_5;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G2;
+                                            gaugeType = LHMGaugeType.Storage_U_5;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G2;
                                         }
                                     }
                                     else if (identifier.IndexOf("/hdd/", StringComparison.OrdinalIgnoreCase) != -1)
@@ -527,68 +527,68 @@
                                         sensorColor = defaultColor;
                                         if (identifier.IndexOf("/0/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_1;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G1;
+                                            gaugeType = LHMGaugeType.Storage_T_1;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G1;
                                         }
                                         else if (identifier.IndexOf("/1/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_2;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G1;
+                                            gaugeType = LHMGaugeType.Storage_T_2;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G1;
                                         }
                                         else if (identifier.IndexOf("/2/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_3;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G1;
+                                            gaugeType = LHMGaugeType.Storage_T_3;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G1;
                                         }
                                         else if (identifier.IndexOf("/3/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_4;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G2;
+                                            gaugeType = LHMGaugeType.Storage_T_4;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G2;
                                         }
                                         else if (identifier.IndexOf("/4/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_4;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G2;
+                                            gaugeType = LHMGaugeType.Storage_T_4;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G2;
                                         }
                                         else if (identifier.IndexOf("/5/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_T_5;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_T_G2;
+                                            gaugeType = LHMGaugeType.Storage_T_5;
+                                            monitorType = LHMGaugeType.Monitor_Storage_T_G2;
                                         }
                                         else if (identifier.IndexOf("/0/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_1;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G1;
+                                            gaugeType = LHMGaugeType.Storage_U_1;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G1;
                                         }
                                         else if (identifier.IndexOf("/1/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_2;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G1;
+                                            gaugeType = LHMGaugeType.Storage_U_2;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G1;
                                         }
                                         else if (identifier.IndexOf("/2/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_3;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G1;
+                                            gaugeType = LHMGaugeType.Storage_U_3;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G1;
                                         }
                                         else if (identifier.IndexOf("/3/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_4;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G2;
+                                            gaugeType = LHMGaugeType.Storage_U_4;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G2;
                                         }
                                         else if (identifier.IndexOf("/4/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_4;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G2;
+                                            gaugeType = LHMGaugeType.Storage_U_4;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G2;
                                         }
                                         else if (identifier.IndexOf("/5/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
-                                            gaugeType = LibreHardwareMonitorGaugeType.Storage_U_5;
-                                            monitorType = LibreHardwareMonitorGaugeType.Mon_Storage_U_G2;
+                                            gaugeType = LHMGaugeType.Storage_U_5;
+                                            monitorType = LHMGaugeType.Monitor_Storage_U_G2;
                                         }
                                     }
                                     else if (identifier.EqualsNoCase("/battery/level/0") && displayName.EqualsNoCase("Charge Level"))
                                     {
-                                        gaugeType = LibreHardwareMonitorGaugeType.Battery;
+                                        gaugeType = LHMGaugeType.Battery;
                                     }
 
                                     if (!this._sensorsByName.ContainsKey(name) && !this._sensorsById.ContainsKey(wmiSensor.GetInstanceId()))
@@ -599,13 +599,13 @@
 
                                         this._sensorsByName[sensor.Name] = sensor;
                                         this._sensorsById[sensor.Id] = sensor;
-                                        if (sensor.GaugeType != LibreHardwareMonitorGaugeType.None && !this._sensorsByGaugeType.ContainsKey(gaugeType))
+                                        if (sensor.GaugeType != LHMGaugeType.None && !this._sensorsByGaugeType.ContainsKey(gaugeType))
                                         {
                                             this._sensorsByGaugeType[sensor.GaugeType] = sensor;
                                             PluginLog.Info("[" + sensor.GaugeType + "] " + identifier + " | " + displayName + " | " + itemDisplayName + " | " + itemFormatString);
                                         }
 
-                                        if (sensor.MonitorType != LibreHardwareMonitorGaugeType.None)
+                                        if (sensor.MonitorType != LHMGaugeType.None)
                                         {
                                             if (!this._sensorListByGaugeType.ContainsKey(sensor.MonitorType))
                                             {
@@ -634,8 +634,8 @@
             }
         }
 
-        private readonly List<LibreHardwareMonitorGaugeType> _modifiedGaugeTypes = new List<LibreHardwareMonitorGaugeType>();
-        private readonly List<LibreHardwareMonitorGaugeType> _modifiedMonitorTypes = new List<LibreHardwareMonitorGaugeType>();
+        private readonly List<LHMGaugeType> _modifiedGaugeTypes = new List<LHMGaugeType>();
+        private readonly List<LHMGaugeType> _modifiedMonitorTypes = new List<LHMGaugeType>();
         private readonly List<String> _modifiedSensorNames = new List<String>();
 
         private void UpdateSensorValues()
@@ -657,11 +657,11 @@
 
                             if (sensor.SetValue(value))
                             {
-                                if (sensor.GaugeType != LibreHardwareMonitorGaugeType.None)
+                                if (sensor.GaugeType != LHMGaugeType.None)
                                 {
                                     this._modifiedGaugeTypes.Add(sensor.GaugeType);
                                 }
-                                if (sensor.MonitorType != LibreHardwareMonitorGaugeType.None)
+                                if (sensor.MonitorType != LHMGaugeType.None)
                                 {
                                     this._modifiedMonitorTypes.Add(sensor.MonitorType);
                                 }
