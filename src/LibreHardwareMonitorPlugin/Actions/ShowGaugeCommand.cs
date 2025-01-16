@@ -114,19 +114,18 @@
         {
             bitmapBuilder.Clear(BitmapColor.Black);
 
-            var n = 25;
-            accentColor = new BitmapColor(Helpers.MinMax(accentColor.R + n, 0, 255), Helpers.MinMax(accentColor.G + n, 0, 255), Helpers.MinMax(accentColor.B + n, 0, 255));
-
-            var color1 = new BitmapColor(accentColor, this.GetAlpha(100));
-            var color2 = new BitmapColor(accentColor, this.GetAlpha(15));
+            var n = 50;
+            var color1 = new BitmapColor(Helpers.MinMax(accentColor.R + n, 0, 255), Helpers.MinMax(accentColor.G + n, 0, 255), Helpers.MinMax(accentColor.B + n, 0, 255));
+            var color2 = new BitmapColor(Helpers.MinMax(accentColor.R - n, 0, 255), Helpers.MinMax(accentColor.G - n, 0, 255), Helpers.MinMax(accentColor.B - n, 0, 255), 25);
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[1] + 15, color1);
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 17, this.frOutLine[2], this.frOutLine[3], color2);
             bitmapBuilder.DrawRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[3], color1);
 
-            var leftBarColor = new BitmapColor(accentColor, this.GetAlpha(80));
-            var rightBarColor = new BitmapColor(accentColor, this.GetAlpha(70));
-            var leftLineColor = new BitmapColor(accentColor, this.GetAlpha(99));
-            var rightLineColor = new BitmapColor(accentColor, this.GetAlpha(99));
+            var leftLineColor = color1;
+            var rightLineColor = color1;
+
+            var leftBarColor = new BitmapColor(Helpers.MinMax(accentColor.R + n, 0, 255), Helpers.MinMax(accentColor.G, 0, 255), Helpers.MinMax(accentColor.B, 0, 255), 125);
+            var rightBarColor = new BitmapColor(Helpers.MinMax(accentColor.R, 0, 255), Helpers.MinMax(accentColor.G, 0, 255), Helpers.MinMax(accentColor.B + n, 0, 255), 125);
             if (barCount == 2)
             {
                 this.DrawOutline(bitmapBuilder, curLevel, maxLevel, rightBarColor, leftBarColor);
