@@ -54,24 +54,8 @@
 
             void AddParameter(LHMGaugeType gaugeType, String GroupName) => this.AddParameter(gaugeType.ToString(), gaugeType.ToString().Replace('_', ' '), GroupName);
 
-            // Rectangle: x, y , width, height
-            this.frOutline = new Int32[4] { 0, 0, 78, 78 }; // 80x80
-            this.middleSqureCoordinates = new Int32[4] { this.frOutline[0] + 8, this.frOutline[1] + 8 * 2 + 3, this.frOutline[2] - 8 * 2, this.frOutline[3] - 8 * 3 };
-
-            // Line: x1, y1, x2, y2
-            var offset = 0;
-            this.LeftLine = new Int32[4] { this.middleSqureCoordinates[0] - offset, this.middleSqureCoordinates[1], this.middleSqureCoordinates[0] - offset, this.middleSqureCoordinates[1] + this.middleSqureCoordinates[3] };
-            this.RightLine = new Int32[4] { this.middleSqureCoordinates[0] + this.middleSqureCoordinates[2] + offset, this.middleSqureCoordinates[1], this.middleSqureCoordinates[0] + this.middleSqureCoordinates[2] + offset, this.middleSqureCoordinates[1] + this.middleSqureCoordinates[3] };
-            this.TopLine = new Int32[4] { this.middleSqureCoordinates[0], this.middleSqureCoordinates[1] - offset, this.middleSqureCoordinates[0] + this.middleSqureCoordinates[2], this.middleSqureCoordinates[1] - offset };
-            this.BottomLine = new Int32[4] { this.middleSqureCoordinates[0], this.middleSqureCoordinates[1] + this.middleSqureCoordinates[3] + offset, this.middleSqureCoordinates[0] + this.middleSqureCoordinates[2], this.middleSqureCoordinates[1] + this.middleSqureCoordinates[3] + offset };
+            this.InitGuage();
         }
-
-        private readonly Int32[] frOutline;
-        private readonly Int32[] middleSqureCoordinates;
-        private readonly Int32[] LeftLine;
-        private readonly Int32[] RightLine;
-        private readonly Int32[] TopLine;
-        private readonly Int32[] BottomLine;
 
         protected override Boolean OnLoad()
         {
@@ -109,17 +93,34 @@
 
         private Int32 GetAlpha(Int32 rate) => rate * 255 / 100;
 
+        private Int32[] frOutLine;
+        private Int32[] frInLine;
+        private Int32[] LeftLine;
+        private Int32[] RightLine;
+
+        private void InitGuage()
+        {
+            // Rectangle: x, y , width, height
+            this.frOutLine = new Int32[4] { 0, 0, 78, 78 }; // 80x80
+            this.frInLine = new Int32[4] { this.frOutLine[0] + 8, this.frOutLine[1] + 8 * 2 + 3, this.frOutLine[2] - 8 * 2, this.frOutLine[3] - 8 * 3 };
+
+            // Line: x1, y1, x2, y2
+            var offset = 0;
+            this.LeftLine = new Int32[4] { this.frInLine[0] - offset, this.frInLine[1], this.frInLine[0] - offset, this.frInLine[1] + this.frInLine[3] };
+            this.RightLine = new Int32[4] { this.frInLine[0] + this.frInLine[2] + offset, this.frInLine[1], this.frInLine[0] + this.frInLine[2] + offset, this.frInLine[1] + this.frInLine[3] };
+        }
+
         private void DrawGuage(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor, Int32 barCount)
         {
             bitmapBuilder.Clear(BitmapColor.Black);
 
             var color1 = new BitmapColor(accentColor, this.GetAlpha(80));
             var color2 = new BitmapColor(accentColor, this.GetAlpha(15));
-            bitmapBuilder.FillRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[1] + 15, BitmapColor.White);
-            bitmapBuilder.FillRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[1] + 15, color1);
-            bitmapBuilder.FillRectangle(this.frOutline[0], this.frOutline[1] + 17, this.frOutline[2], this.frOutline[3], color2);
-            bitmapBuilder.DrawRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[3], BitmapColor.White);
-            bitmapBuilder.DrawRectangle(this.frOutline[0], this.frOutline[1], this.frOutline[2], this.frOutline[3], color1);
+            bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[1] + 15, BitmapColor.White);
+            bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[1] + 15, color1);
+            bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 17, this.frOutLine[2], this.frOutLine[3], color2);
+            bitmapBuilder.DrawRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[3], BitmapColor.White);
+            bitmapBuilder.DrawRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[3], color1);
 
             var leftBarColor = new BitmapColor(accentColor, this.GetAlpha(60));
             var rightBarColor = new BitmapColor(accentColor, this.GetAlpha(50));
@@ -139,47 +140,47 @@
 
         private void DrawBar(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor barColor, BitmapColor lineColor)
         {
-            var x = this.middleSqureCoordinates[0] + 2;
-            var y = this.middleSqureCoordinates[1] + 2;
-            var w = this.middleSqureCoordinates[2] - 3;
-            var h = this.middleSqureCoordinates[3] - 4;
+            var x = this.frInLine[0] + 2;
+            var y = this.frInLine[1] + 2;
+            var w = this.frInLine[2] - 3;
+            var h = this.frInLine[3] - 4;
 
-            bitmapBuilder.FillRectangle(this.middleSqureCoordinates[0],
-                                        this.middleSqureCoordinates[1],
-                                        this.middleSqureCoordinates[2],
-                                        this.middleSqureCoordinates[3],
+            bitmapBuilder.FillRectangle(this.frInLine[0],
+                                        this.frInLine[1],
+                                        this.frInLine[2],
+                                        this.frInLine[3],
                                         BitmapColor.Black);
 
             this.GetRectangleYHByLevel(curLevel[0] / maxLevel[0], y, h, out var bottomY, out var bottomH);
             bitmapBuilder.FillRectangle(x, bottomY, w, bottomH, barColor);
-            bitmapBuilder.DrawRectangle(this.middleSqureCoordinates[0],
-                                        this.middleSqureCoordinates[1],
-                                        this.middleSqureCoordinates[2],
-                                        this.middleSqureCoordinates[3],
+            bitmapBuilder.DrawRectangle(this.frInLine[0],
+                                        this.frInLine[1],
+                                        this.frInLine[2],
+                                        this.frInLine[3],
                                         BitmapColor.White);
-            bitmapBuilder.DrawRectangle(this.middleSqureCoordinates[0],
-                                        this.middleSqureCoordinates[1],
-                                        this.middleSqureCoordinates[2],
-                                        this.middleSqureCoordinates[3],
+            bitmapBuilder.DrawRectangle(this.frInLine[0],
+                                        this.frInLine[1],
+                                        this.frInLine[2],
+                                        this.frInLine[3],
                                         lineColor);
         }
 
         private void DrawBar(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor leftBarColor, BitmapColor rightBarColor, BitmapColor leftLineColor, BitmapColor rightLineColor)
         {
-            var x = this.middleSqureCoordinates[0] + 2;
-            var y = this.middleSqureCoordinates[1] + 2;
-            var w = this.middleSqureCoordinates[2] / 2 - 3 - 1;
-            var h = this.middleSqureCoordinates[3] - 4;
+            var x = this.frInLine[0] + 2;
+            var y = this.frInLine[1] + 2;
+            var w = this.frInLine[2] / 2 - 3 - 1;
+            var h = this.frInLine[3] - 4;
 
-            var lx = this.middleSqureCoordinates[0];
-            var ly = this.middleSqureCoordinates[1];
-            var lw = this.middleSqureCoordinates[2] / 2 - 1;
-            var lh = this.middleSqureCoordinates[3];
+            var lx = this.frInLine[0];
+            var ly = this.frInLine[1];
+            var lw = this.frInLine[2] / 2 - 1;
+            var lh = this.frInLine[3];
 
-            bitmapBuilder.FillRectangle(this.middleSqureCoordinates[0],
-                                        this.middleSqureCoordinates[1],
-                                        this.middleSqureCoordinates[2],
-                                        this.middleSqureCoordinates[3],
+            bitmapBuilder.FillRectangle(this.frInLine[0],
+                                        this.frInLine[1],
+                                        this.frInLine[2],
+                                        this.frInLine[3],
                                         BitmapColor.Black);
             // left
             this.GetRectangleYHByLevel(curLevel[0] / maxLevel[0], y, h, out var bottomLY, out var bottomLH);
