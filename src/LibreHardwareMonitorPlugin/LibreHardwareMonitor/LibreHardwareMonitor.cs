@@ -22,7 +22,7 @@
         public LibreHardwareMonitor()
         {
             //this._periodicTimer.Interval = 2_000;
-            this._periodicTimer.Interval = 500;
+            this._periodicTimer.Interval = 250;
             this._periodicTimer.AutoReset = true;
             this._periodicTimer.Elapsed += this.OnPeriodicTimerElapsed;
 
@@ -296,7 +296,7 @@
                     var parentId = cpuId;
 
                     AddSensor("Clock", @"{-}\n{0:N1} MHz");
-                    AddSensor("Load", @"CPU\n{0:N1} %");
+                    AddSensor("Load", @"{-}\n{0:N1} %");
                     AddSensor("Power", @"{-}\n{0:N1} W");
                     AddSensor("Temperature", @"{-}\n{0:N1} °C");
                     AddSensor("Voltage", @"{-}\n{0:N3} V");
@@ -304,13 +304,13 @@
                     parentName = "GPU";
                     parentId = gpuId;
 
-                    AddSensor("Clock", @"GPU\n{0:N1} MHz");
-                    AddSensor("Load", @"GPU\n{0:N1} %");
-                    AddSensor("Power", @"GPU\n{0:N1} W");
-                    AddSensor("Temperature", @"GPU\n{0:N1} °C");
-                    AddSensor("SmallData", @"GPU\n{0:N0} MB");
-                    AddSensor("Fan", @"GPU\n{0:N0} RPM");
-                    AddSensor("Control", @"GPU\n{0:N1} %");
+                    AddSensor("Clock", @"{-}\n{0:N1} MHz");
+                    AddSensor("Load", @"{-}\n{0:N1} %");
+                    AddSensor("Power", @"{-}\n{0:N1} W");
+                    AddSensor("Temperature", @"{-}\n{0:N1} °C");
+                    AddSensor("SmallData", @"{-}\n{0:N0} MB");
+                    AddSensor("Fan", @"{-}\n{0:N0} RPM");
+                    AddSensor("Control", @"{-}\n{0:N1} %");
 
                     parentName = "Memory";
                     parentId = memoryId;
