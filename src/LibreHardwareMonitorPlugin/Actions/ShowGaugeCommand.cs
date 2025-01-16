@@ -114,18 +114,19 @@
         {
             bitmapBuilder.Clear(BitmapColor.Black);
 
-            var color1 = new BitmapColor(accentColor, this.GetAlpha(80));
+            var n = 25;
+            accentColor = new BitmapColor(Helpers.MinMax(accentColor.R + n, 0, 255), Helpers.MinMax(accentColor.G + n, 0, 255), Helpers.MinMax(accentColor.B + n, 0, 255));
+
+            var color1 = new BitmapColor(accentColor, this.GetAlpha(100));
             var color2 = new BitmapColor(accentColor, this.GetAlpha(15));
-            bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[1] + 15, BitmapColor.White);
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[1] + 15, color1);
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 17, this.frOutLine[2], this.frOutLine[3], color2);
-            bitmapBuilder.DrawRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[3], BitmapColor.White);
             bitmapBuilder.DrawRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[3], color1);
 
-            var leftBarColor = new BitmapColor(accentColor, this.GetAlpha(60));
-            var rightBarColor = new BitmapColor(accentColor, this.GetAlpha(50));
-            var leftLineColor = new BitmapColor(accentColor, this.GetAlpha(80));
-            var rightLineColor = new BitmapColor(accentColor, this.GetAlpha(80));
+            var leftBarColor = new BitmapColor(accentColor, this.GetAlpha(80));
+            var rightBarColor = new BitmapColor(accentColor, this.GetAlpha(70));
+            var leftLineColor = new BitmapColor(accentColor, this.GetAlpha(99));
+            var rightLineColor = new BitmapColor(accentColor, this.GetAlpha(99));
             if (barCount == 2)
             {
                 this.DrawOutline(bitmapBuilder, curLevel, maxLevel, rightBarColor, leftBarColor);
@@ -185,13 +186,11 @@
             // left
             this.GetRectangleYHByLevel(curLevel[0] / maxLevel[0], y, h, out var bottomLY, out var bottomLH);
             bitmapBuilder.FillRectangle(x, bottomLY, w, bottomLH, leftBarColor);
-            bitmapBuilder.DrawRectangle(lx, ly, lw, lh, BitmapColor.White);
             bitmapBuilder.DrawRectangle(lx, ly, lw, lh, leftLineColor);
 
             // right
             this.GetRectangleYHByLevel(curLevel[1] / maxLevel[1], y, h, out var bottomRY, out var bottomRH);
             bitmapBuilder.FillRectangle(x + w + 5, bottomRY, w, bottomRH, rightBarColor);
-            bitmapBuilder.DrawRectangle(lx + w + 5, ly, lw, lh, BitmapColor.White);
             bitmapBuilder.DrawRectangle(lx + w + 5, ly, lw, lh, rightLineColor);
         }
 
@@ -219,7 +218,6 @@
             var lx2 = this.LeftLine[2] - 3;
             var ly2 = this.LeftLine[3];
             this.GetLineY1Y2ByLevel(curLevel[0] / maxLevel[0], ly1, ly2, out var middleLY1, out var middleLY2);
-            bitmapBuilder.DrawLine(lx1, middleLY1, lx2, middleLY2, BitmapColor.White, 4);
             bitmapBuilder.DrawLine(lx1, middleLY1, lx2, middleLY2, leftColor, 4);
 
             // Right Line: x1, y1, x2, y2
@@ -228,7 +226,6 @@
             var rx2 = this.RightLine[2] + 4;
             var ry2 = this.RightLine[3];
             this.GetLineY1Y2ByLevel(curLevel[0] / maxLevel[0], ry1, ry2, out var middleRY1, out var middleRY2);
-            bitmapBuilder.DrawLine(rx1, middleRY1, rx2, middleRY2, BitmapColor.White, 4);
             bitmapBuilder.DrawLine(rx1, middleRY1, rx2, middleRY2, rightColor, 4);
         }
 
@@ -254,7 +251,7 @@
             {
                 var displayName = gaugeType.ToString().Replace('_', ' ');
                 var accentColor = (gaugeType == LHMGaugeType.Monitor_Memory
-                                   || gaugeType == LHMGaugeType.Monitor_Memory_Load) ? new BitmapColor(253, 100, 150) : sensor.Color;
+                                   || gaugeType == LHMGaugeType.Monitor_Memory_Load) ? new BitmapColor(90, 90, 200) : sensor.Color;
                 var titleColor = BitmapColor.Black;
                 var valueColor = BitmapColor.White;
                 var unitColor = new BitmapColor(accentColor, 180);
