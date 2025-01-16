@@ -22,7 +22,7 @@
         public LibreHardwareMonitor()
         {
             //this._periodicTimer.Interval = 2_000;
-            this._periodicTimer.Interval = 250;
+            this._periodicTimer.Interval = 500;
             this._periodicTimer.AutoReset = true;
             this._periodicTimer.Elapsed += this.OnPeriodicTimerElapsed;
 
@@ -227,11 +227,11 @@
                     var storageIds = new List<String>();
 
                     // sensorColor
-                    var defaultColor = new BitmapColor(253, 100, 150);
-                    var intelColor = new BitmapColor(0, 199, 253);
+                    var defaultColor = new BitmapColor(153, 100, 50);
+                    var intelColor = new BitmapColor(0, 170, 230);
                     var amdColor = new BitmapColor(255, 36, 36);
-                    var nvidiaColor = new BitmapColor(120, 180, 50);
-                    var cpuColor = amdColor;
+                    var nvidiaColor = new BitmapColor(100, 200, 60);
+                    var cpuColor = intelColor;
                     var gpuColor = nvidiaColor;
 
                     var hardwareQuery = $"SELECT HardwareType,Identifier FROM Hardware WHERE ProcessId = \"{processId}\"";
