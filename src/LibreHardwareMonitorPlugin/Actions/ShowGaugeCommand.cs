@@ -123,17 +123,16 @@
 
             var leftLineColor = color1;
             var rightLineColor = color1;
+            this.DrawOutline(bitmapBuilder, curLevel, maxLevel, leftLineColor, rightLineColor);
 
             var leftBarColor = new BitmapColor(Helpers.MinMax(accentColor.R + n, 0, 255), Helpers.MinMax(accentColor.G, 0, 255), Helpers.MinMax(accentColor.B, 0, 255), 125);
             var rightBarColor = new BitmapColor(Helpers.MinMax(accentColor.R, 0, 255), Helpers.MinMax(accentColor.G, 0, 255), Helpers.MinMax(accentColor.B + n, 0, 255), 125);
             if (barCount == 2)
             {
-                this.DrawOutline(bitmapBuilder, curLevel, maxLevel, rightBarColor, leftBarColor);
                 this.DrawBar(bitmapBuilder, curLevel, maxLevel, leftBarColor, rightBarColor, leftLineColor, rightLineColor);
             }
             else
             {
-                this.DrawOutline(bitmapBuilder, curLevel, maxLevel, leftBarColor, leftBarColor);
                 this.DrawBar(bitmapBuilder, curLevel, maxLevel, leftBarColor, leftLineColor);
             }
         }
