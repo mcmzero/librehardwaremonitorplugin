@@ -108,7 +108,7 @@
             this.RightLine = new Int32[4] { this.frInLine[0] + this.frInLine[2] + offset, this.frInLine[1], this.frInLine[0] + this.frInLine[2] + offset, this.frInLine[1] + this.frInLine[3] };
         }
 
-        private void DrawGuage(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor accentColor, Int32 barCount)
+        private void DrawGuage(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, Int32 barCount)
         {
             bitmapBuilder.Clear(BitmapColor.Black);
 
@@ -117,11 +117,11 @@
             var color1 = this.GetColorByLevel(level, 255, 120);
             var color2 = this.GetColorByLevel(level, 25, 120);
 
+            var gray = new BitmapColor(BitmapColor.White, 220);
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 2, this.frOutLine[2], this.frOutLine[1] + 12, color1);
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 16, this.frOutLine[2], this.frOutLine[3], color2);
-            bitmapBuilder.DrawRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[3], color1);
+            bitmapBuilder.DrawRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[3], gray);
 
-            var gray = new BitmapColor(BitmapColor.White, 150);
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], 1, gray);
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 15, this.frOutLine[2], 1, gray);
 
@@ -131,23 +131,23 @@
 
             if (barCount == 2)
             {
-                this.DrawBar(bitmapBuilder, curLevel, maxLevel, leftLineColor, rightLineColor);
+                this.DrawBar2(bitmapBuilder, curLevel, maxLevel);
             }
             else
             {
-                this.DrawBar(bitmapBuilder, curLevel, maxLevel, leftLineColor);
+                this.DrawBar(bitmapBuilder, curLevel, maxLevel);
             }
         }
 
-        private void DrawBar(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor lineColor)
+        private void DrawBar(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel)
         {
             bitmapBuilder.FillRectangle(this.frInLine[0], this.frInLine[1], this.frInLine[2], this.frInLine[3], BitmapColor.Black);
+            var gray = new BitmapColor(BitmapColor.White, 220);
             var level = curLevel[0] / maxLevel[0];
             if (level > 0.001)
             {
                 var colorLevel = new Single[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f }; // g b r
                 var barColor = this.GetColorByLevel(level, 200, 30);
-                var gray = new BitmapColor(BitmapColor.White, 150);
 
                 var x = this.frInLine[0] + 2;
                 var y = this.frInLine[1] + 2;
@@ -159,10 +159,10 @@
                 bitmapBuilder.FillRectangle(x, bottomY, w, 1, gray);
                 bitmapBuilder.FillRectangle(x, bottomY + bottomH - 1, w, 1, gray);
             }
-            bitmapBuilder.DrawRectangle(this.frInLine[0], this.frInLine[1], this.frInLine[2], this.frInLine[3], lineColor);
+            bitmapBuilder.DrawRectangle(this.frInLine[0], this.frInLine[1], this.frInLine[2], this.frInLine[3], gray);
         }
 
-        private void DrawBar(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor leftLineColor, BitmapColor rightLineColor)
+        private void DrawBar2(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel)
         {
             var x = this.frInLine[0] + 2;
             var y = this.frInLine[1] + 2;
@@ -174,7 +174,7 @@
             var lh = this.frInLine[3];
 
             bitmapBuilder.FillRectangle(this.frInLine[0], this.frInLine[1], this.frInLine[2], this.frInLine[3], BitmapColor.Black);
-            var gray = new BitmapColor(BitmapColor.White, 150);
+            var gray = new BitmapColor(BitmapColor.White, 220);
 
             var leftLevel = curLevel[0] / maxLevel[0];
             if (leftLevel > 0.001)
@@ -185,7 +185,7 @@
                 bitmapBuilder.FillRectangle(x, bottomLY, w, 1, gray);
                 bitmapBuilder.FillRectangle(x, bottomLY + bottomLH - 1, w, 1, gray);
             }
-            bitmapBuilder.DrawRectangle(lx, ly, lw, lh, leftLineColor);
+            bitmapBuilder.DrawRectangle(lx, ly, lw, lh, gray);
 
             var rightLevel = curLevel[1] / maxLevel[1];
             if (rightLevel > 0.001)
@@ -196,7 +196,7 @@
                 bitmapBuilder.FillRectangle(x + w + 5, bottomRY, w, 1, gray);
                 bitmapBuilder.FillRectangle(x + w + 5, bottomRY + bottomRH - 1, w, 1, gray);
             }
-            bitmapBuilder.DrawRectangle(lx + w + 5, ly, lw, lh, rightLineColor);
+            bitmapBuilder.DrawRectangle(lx + w + 5, ly, lw, lh, gray);
         }
 
         private BitmapColor GetColorByLevel(Single level, Int32 alpha, Int32 baseRGB)
@@ -269,7 +269,7 @@
 
         private void DrawOutline(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor leftColor, BitmapColor rightColor)
         {
-            var gray = new BitmapColor(BitmapColor.White, 150);
+            var gray = new BitmapColor(BitmapColor.White, 220);
 
             // Left Line: x1, y1, x2, y2
             var lx1 = this.LeftLine[0] - 3;
@@ -351,12 +351,12 @@
                 var height = 11;
                 void DrawGuage1(String dname)
                 {
-                    this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 1);
+                    this.DrawGuage(bitmapBuilder, curLevel, maxLevel, 1);
                     bitmapBuilder.DrawText(dname, titleX[0], titleY, width, height, titleColor, titleFontSize);
                 }
                 void DrawGuage2(String dname)
                 {
-                    this.DrawGuage(bitmapBuilder, curLevel, maxLevel, accentColor, 2);
+                    this.DrawGuage(bitmapBuilder, curLevel, maxLevel, 2);
                     bitmapBuilder.DrawText(dname, titleX[0], titleY, width, height, titleColor, titleFontSize);
                 }
                 void DrawValueXY(String vt, Int32 x, Int32 y, Int32 fontType) => bitmapBuilder.DrawText(vt, x, y, width, height, valueColor, fontType == 1 ? valueFontSize : valueDualFontSize);
