@@ -345,6 +345,7 @@
                             foreach (var wmiSensor in sensorSearcher.Get())
                             {
                                 var displayName = wmiSensor.GetDisplayName();
+                                var maxValue = Helpers.MinMax((wmiSensor.GetValue() + 25) * 2.0f, 50, 120);
 
                                 if (!displayName.Contains(" #"))
                                 {
@@ -364,14 +365,17 @@
                                         {
                                             gaugeType = LHMGaugeType.CPU_Power;
                                             monitorType = LHMGaugeType.Monitor_CPU;
+                                            maxValue = 120;
                                         }
                                         else if (identifier.IndexOf("/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.CPU_Load;
                                             monitorType = LHMGaugeType.Monitor_CPU;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/temperature", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
+                                            maxValue = 85;
                                             if (identifier.IndexOf("/amdcpu", StringComparison.OrdinalIgnoreCase) != -1)
                                             {
                                                 if (identifier.IndexOf("/temperature/2", StringComparison.OrdinalIgnoreCase) != -1)
@@ -405,9 +409,11 @@
                                         {
                                             gaugeType = LHMGaugeType.GPU_Power;
                                             monitorType = LHMGaugeType.Monitor_GPU;
+                                            maxValue = 400;
                                         }
                                         else if (identifier.IndexOf("/load", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
+                                            maxValue = 100;
                                             if (identifier.IndexOf("/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                             {
                                                 gaugeType = LHMGaugeType.GPU_Load;
@@ -424,10 +430,12 @@
                                         {
                                             gaugeType = LHMGaugeType.GPU_Core;
                                             monitorType = LHMGaugeType.Monitor_GPU;
+                                            maxValue = 83;
                                         }
                                         else if (identifier.IndexOf("/temperature/2", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.GPU_Hotspot;
+                                            maxValue = 83;
                                         }
                                         else if (identifier.IndexOf("/smalldata/3", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
@@ -442,11 +450,13 @@
                                         {
                                             gaugeType = LHMGaugeType.Memory_Load;
                                             monitorType = LHMGaugeType.Monitor_Memory_Load;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/load/1", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Virtual_Memory_Load;
                                             monitorType = LHMGaugeType.Monitor_Memory_Load;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/data/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
@@ -466,61 +476,73 @@
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_1;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G1;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/1/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_2;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G1;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/2/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_3;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G1;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/3/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_4;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G2;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/4/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_4;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G2;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/5/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_5;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G2;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/0/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_1;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G1;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/1/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_2;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G1;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/2/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_3;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G1;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/3/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_4;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G2;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/4/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_4;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G2;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/5/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_5;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G2;
+                                            maxValue = 100;
                                         }
                                     }
                                     else if (identifier.IndexOf("/hdd/", StringComparison.OrdinalIgnoreCase) != -1)
@@ -530,73 +552,86 @@
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_1;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G1;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/1/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_2;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G1;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/2/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_3;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G1;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/3/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_4;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G2;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/4/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_4;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G2;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/5/temperature/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_T_5;
                                             monitorType = LHMGaugeType.Monitor_Storage_T_G2;
+                                            maxValue = 80;
                                         }
                                         else if (identifier.IndexOf("/0/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_1;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G1;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/1/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_2;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G1;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/2/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_3;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G1;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/3/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_4;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G2;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/4/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_4;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G2;
+                                            maxValue = 100;
                                         }
                                         else if (identifier.IndexOf("/5/load/0", StringComparison.OrdinalIgnoreCase) != -1)
                                         {
                                             gaugeType = LHMGaugeType.Storage_U_5;
                                             monitorType = LHMGaugeType.Monitor_Storage_U_G2;
+                                            maxValue = 100;
                                         }
                                     }
                                     else if (identifier.EqualsNoCase("/battery/level/0") && displayName.EqualsNoCase("Charge Level"))
                                     {
                                         gaugeType = LHMGaugeType.Battery;
+                                        maxValue = 100;
                                     }
 
                                     if (!this._sensorsByName.ContainsKey(name) && !this._sensorsById.ContainsKey(wmiSensor.GetInstanceId()))
                                     {
                                         var itemFormatString = formatString.Replace("{-}", displayName);
                                         var itemDisplayName = $"[{parentName} {sensorType}] {displayName}";
-                                        var sensor = new LibreHardwareMonitorSensor(name, wmiSensor.GetInstanceId(), identifier, itemDisplayName, itemFormatString, wmiSensor.GetValue(), gaugeType, monitorType, sensorColor);
+                                        var sensor = new LibreHardwareMonitorSensor(name, wmiSensor.GetInstanceId(), identifier, itemDisplayName, itemFormatString, wmiSensor.GetValue(), maxValue, gaugeType, monitorType, sensorColor);
 
                                         this._sensorsByName[sensor.Name] = sensor;
                                         this._sensorsById[sensor.Id] = sensor;
