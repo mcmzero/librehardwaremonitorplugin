@@ -32,7 +32,7 @@
         public BitmapColor GetColor() => this.Color;
         public BitmapColor SetColor(BitmapColor color) => this.Color = color;
 
-        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LHMGaugeType gaugeType, LHMGaugeType monitorType)
+        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, Single maxValue, LHMGaugeType gaugeType, LHMGaugeType monitorType)
         {
             this.Id = LibreHardwareMonitorSensor.CreateSensorId(instanceId, identifier);
 
@@ -43,12 +43,12 @@
             this.FormatString = formatString;
             this.Value = value;
             this.MinValue = value;
-            this.MaxValue = Helpers.MinMax((value + 20) * 1.5f, 50, 120);
+            this.MaxValue = maxValue;
             this.GaugeType = gaugeType;
             this.MonitorType = monitorType;
         }
 
-        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, LHMGaugeType gaugeType, LHMGaugeType monitorType, BitmapColor color)
+        internal LibreHardwareMonitorSensor(String name, String instanceId, String identifier, String displayName, String formatString, Single value, Single maxValue, LHMGaugeType gaugeType, LHMGaugeType monitorType, BitmapColor color)
         {
             this.Id = LibreHardwareMonitorSensor.CreateSensorId(instanceId, identifier);
 
@@ -59,7 +59,7 @@
             this.FormatString = formatString;
             this.Value = value;
             this.MinValue = value;
-            this.MaxValue = Helpers.MinMax((value + 20) * 1.5f, 50, 120);
+            this.MaxValue = maxValue;
             this.GaugeType = gaugeType;
             this.MonitorType = monitorType;
             this.Color = color;
@@ -89,7 +89,6 @@
             if (value > this.MaxValue)
             {
                 this.MaxValue = value < 100 ? Helpers.MinMax(value + 20, 0, 100) : value;
-                this.MaxValue = value;
             }
 
             return true;
