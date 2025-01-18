@@ -43,7 +43,7 @@
             this.FormatString = formatString;
             this.Value = value;
             this.MinValue = value;
-            this.MaxValue = Helpers.MinMax((value + 10) * 1.5f, 50, 120);
+            this.MaxValue = Helpers.MinMax((value + 20) * 1.5f, 50, 120);
             this.GaugeType = gaugeType;
             this.MonitorType = monitorType;
         }
@@ -59,7 +59,7 @@
             this.FormatString = formatString;
             this.Value = value;
             this.MinValue = value;
-            this.MaxValue = Helpers.MinMax((value + 10) * 1.5f, 50, 120);
+            this.MaxValue = Helpers.MinMax((value + 20) * 1.5f, 50, 120);
             this.GaugeType = gaugeType;
             this.MonitorType = monitorType;
             this.Color = color;
@@ -84,11 +84,11 @@
             this.Value = value;
             if (value < this.MinValue)
             {
-                this.MinValue = value;
+                this.MinValue = Helpers.MinMax(value, 0, 500);
             }
             if (value > this.MaxValue)
             {
-                //this.MaxValue = value < 95 ? 95 : value;
+                this.MaxValue = value < 100 ? Helpers.MinMax(value + 20, 0, 100) : value;
                 this.MaxValue = value;
             }
 
