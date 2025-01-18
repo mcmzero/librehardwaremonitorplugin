@@ -141,23 +141,24 @@
 
         private void DrawBar(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor lineColor)
         {
-            var x = this.frInLine[0] + 2;
-            var y = this.frInLine[1] + 2;
-            var w = this.frInLine[2] - 3;
-            var h = this.frInLine[3] - 4;
-
             bitmapBuilder.FillRectangle(this.frInLine[0], this.frInLine[1], this.frInLine[2], this.frInLine[3], BitmapColor.Black);
-
-            var colorLevel = new Single[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f }; // g b r
-
             var level = curLevel[0] / maxLevel[0];
-            var barColor = this.GetColorByLevel(level, 200, 30);
-            var gray = new BitmapColor(BitmapColor.White, 150);
+            if (level > 0.001)
+            {
+                var colorLevel = new Single[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f }; // g b r
+                var barColor = this.GetColorByLevel(level, 200, 30);
+                var gray = new BitmapColor(BitmapColor.White, 150);
 
-            this.GetRectangleYHByLevel(level, y, h, out var bottomY, out var bottomH);
-            bitmapBuilder.FillRectangle(x, bottomY, w, bottomH, barColor);
-            bitmapBuilder.FillRectangle(x, bottomY, w, 1, gray);
+                var x = this.frInLine[0] + 2;
+                var y = this.frInLine[1] + 2;
+                var w = this.frInLine[2] - 3;
+                var h = this.frInLine[3] - 4;
 
+                this.GetRectangleYHByLevel(level, y, h, out var bottomY, out var bottomH);
+                bitmapBuilder.FillRectangle(x, bottomY, w, bottomH, barColor);
+                bitmapBuilder.FillRectangle(x, bottomY, w, 1, gray);
+                bitmapBuilder.FillRectangle(x, bottomY + bottomH - 1, w, 1, gray);
+            }
             bitmapBuilder.DrawRectangle(this.frInLine[0], this.frInLine[1], this.frInLine[2], this.frInLine[3], lineColor);
         }
 
@@ -167,30 +168,34 @@
             var y = this.frInLine[1] + 2;
             var w = this.frInLine[2] / 2 - 3 - 1;
             var h = this.frInLine[3] - 4;
-
             var lx = this.frInLine[0];
             var ly = this.frInLine[1];
             var lw = this.frInLine[2] / 2 - 1;
             var lh = this.frInLine[3];
 
             bitmapBuilder.FillRectangle(this.frInLine[0], this.frInLine[1], this.frInLine[2], this.frInLine[3], BitmapColor.Black);
-
-
-            var leftLevel = curLevel[0] / maxLevel[0];
-            var rightLevel = curLevel[1] / maxLevel[1];
-            var leftBarColor = this.GetColorByLevel(leftLevel, 200, 30);
-            var rightBarColor = this.GetColorByLevel(rightLevel, 200, 30);
             var gray = new BitmapColor(BitmapColor.White, 150);
 
-            this.GetRectangleYHByLevel(leftLevel, y, h, out var bottomLY, out var bottomLH);
-            this.GetRectangleYHByLevel(rightLevel, y, h, out var bottomRY, out var bottomRH);
-
-            bitmapBuilder.FillRectangle(x, bottomLY, w, bottomLH, leftBarColor);
-            bitmapBuilder.FillRectangle(x + w + 5, bottomRY, w, bottomRH, rightBarColor);
-            bitmapBuilder.FillRectangle(x, bottomLY, w, 1, gray);
-            bitmapBuilder.FillRectangle(x + w + 5, bottomRY, w, 1, gray);
-
+            var leftLevel = curLevel[0] / maxLevel[0];
+            if (leftLevel > 0.001)
+            {
+                var leftBarColor = this.GetColorByLevel(leftLevel, 200, 30);
+                this.GetRectangleYHByLevel(leftLevel, y, h, out var bottomLY, out var bottomLH);
+                bitmapBuilder.FillRectangle(x, bottomLY, w, bottomLH, leftBarColor);
+                bitmapBuilder.FillRectangle(x, bottomLY, w, 1, gray);
+                bitmapBuilder.FillRectangle(x, bottomLY + bottomLH - 1, w, 1, gray);
+            }
             bitmapBuilder.DrawRectangle(lx, ly, lw, lh, leftLineColor);
+
+            var rightLevel = curLevel[1] / maxLevel[1];
+            if (rightLevel > 0.001)
+            {
+                var rightBarColor = this.GetColorByLevel(rightLevel, 200, 30);
+                this.GetRectangleYHByLevel(rightLevel, y, h, out var bottomRY, out var bottomRH);
+                bitmapBuilder.FillRectangle(x + w + 5, bottomRY, w, bottomRH, rightBarColor);
+                bitmapBuilder.FillRectangle(x + w + 5, bottomRY, w, 1, gray);
+                bitmapBuilder.FillRectangle(x + w + 5, bottomRY + bottomRH - 1, w, 1, gray);
+            }
             bitmapBuilder.DrawRectangle(lx + w + 5, ly, lw, lh, rightLineColor);
         }
 
