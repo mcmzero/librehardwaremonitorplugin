@@ -117,9 +117,13 @@
             var color1 = this.GetColorByLevel(level, 255, 120);
             var color2 = this.GetColorByLevel(level, 25, 120);
 
-            bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[1] + 15, color1);
-            bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 17, this.frOutLine[2], this.frOutLine[3], color2);
+            bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 2, this.frOutLine[2], this.frOutLine[1] + 12, color1);
+            bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 16, this.frOutLine[2], this.frOutLine[3], color2);
             bitmapBuilder.DrawRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], this.frOutLine[3], color1);
+
+            var gray = new BitmapColor(BitmapColor.White, 150);
+            bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], 1, gray);
+            bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 15, this.frOutLine[2], 1, gray);
 
             var leftLineColor = this.GetColorByLevel(level, 150, 80);
             var rightLineColor = this.GetColorByLevel(level, 150, 80);
@@ -148,9 +152,11 @@
 
             var level = curLevel[0] / maxLevel[0];
             var barColor = this.GetColorByLevel(level, 200, 30);
+            var gray = new BitmapColor(BitmapColor.White, 150);
 
             this.GetRectangleYHByLevel(level, y, h, out var bottomY, out var bottomH);
             bitmapBuilder.FillRectangle(x, bottomY, w, bottomH, barColor);
+            bitmapBuilder.FillRectangle(x, bottomY, w, 1, gray);
 
             bitmapBuilder.DrawRectangle(this.frInLine[0], this.frInLine[1], this.frInLine[2], this.frInLine[3], lineColor);
         }
@@ -174,12 +180,15 @@
             var rightLevel = curLevel[1] / maxLevel[1];
             var leftBarColor = this.GetColorByLevel(leftLevel, 200, 30);
             var rightBarColor = this.GetColorByLevel(rightLevel, 200, 30);
+            var gray = new BitmapColor(BitmapColor.White, 150);
 
             this.GetRectangleYHByLevel(leftLevel, y, h, out var bottomLY, out var bottomLH);
             this.GetRectangleYHByLevel(rightLevel, y, h, out var bottomRY, out var bottomRH);
 
             bitmapBuilder.FillRectangle(x, bottomLY, w, bottomLH, leftBarColor);
             bitmapBuilder.FillRectangle(x + w + 5, bottomRY, w, bottomRH, rightBarColor);
+            bitmapBuilder.FillRectangle(x, bottomLY, w, 1, gray);
+            bitmapBuilder.FillRectangle(x + w + 5, bottomRY, w, 1, gray);
 
             bitmapBuilder.DrawRectangle(lx, ly, lw, lh, leftLineColor);
             bitmapBuilder.DrawRectangle(lx + w + 5, ly, lw, lh, rightLineColor);
@@ -255,6 +264,8 @@
 
         private void DrawOutline(BitmapBuilder bitmapBuilder, Single[] curLevel, Single[] maxLevel, BitmapColor leftColor, BitmapColor rightColor)
         {
+            var gray = new BitmapColor(BitmapColor.White, 150);
+
             // Left Line: x1, y1, x2, y2
             var lx1 = this.LeftLine[0] - 3;
             var ly1 = this.LeftLine[1];
@@ -263,6 +274,9 @@
             this.GetLineY1Y2ByLevel(curLevel[0] / maxLevel[0], ly1, ly2, out var middleLY1, out var middleLY2);
             bitmapBuilder.DrawLine(lx1, middleLY1, lx2, middleLY2, leftColor, 4);
 
+            bitmapBuilder.DrawLine(lx1 - 2, middleLY1, lx2 + 2, middleLY1, gray, 1);
+            bitmapBuilder.DrawLine(lx1 - 2, middleLY2, lx2 + 2, middleLY2, gray, 1);
+
             // Right Line: x1, y1, x2, y2
             var rx1 = this.RightLine[0] + 4;
             var ry1 = this.RightLine[1];
@@ -270,6 +284,9 @@
             var ry2 = this.RightLine[3];
             this.GetLineY1Y2ByLevel(curLevel[0] / maxLevel[0], ry1, ry2, out var middleRY1, out var middleRY2);
             bitmapBuilder.DrawLine(rx1, middleRY1, rx2, middleRY2, rightColor, 4);
+
+            bitmapBuilder.DrawLine(rx1 - 2, middleRY1, rx1 + 2, middleRY1, gray, 1);
+            bitmapBuilder.DrawLine(rx1 - 2, middleRY2, rx1 + 2, middleRY2, gray, 1);
         }
 
         protected override BitmapImage GetCommandImage(String actionParameter, PluginImageSize imageSize)
@@ -301,7 +318,6 @@
                 var monTitleColor = accentColor;
                 var monValueColor = BitmapColor.White;
 
-                var maxLimit = 95;
                 var maxLevel = new[] { this._lastMaxLevel[(Int32)gaugeType], this._lastMaxLevel[(Int32)gaugeType], this._lastMaxLevel[(Int32)gaugeType] };
                 var curLevel = new[] { this._lastLevel[(Int32)gaugeType], this._lastLevel[(Int32)gaugeType], this._lastLevel[(Int32)gaugeType] };
                 var monType = new[] { (Int32)gaugeType, (Int32)gaugeType, (Int32)gaugeType };
@@ -365,14 +381,11 @@
 
                     case LHMGaugeType.GPU_Core:
                     case LHMGaugeType.CPU_Core:
-                        maxLimit = gaugeType == LHMGaugeType.CPU_Core ? 95 : 83;
                         for (i = 0; i < 2; i++)
                         {
                             monType[i] = (Int32)gaugeType + i;
                             curLevel[i] = this._lastLevel[monType[i]];
                             maxLevel[i] = this._lastMaxLevel[monType[i]];
-                            maxLevel[i] = maxLevel[i] < maxLimit ? maxLimit : maxLevel[i];
-                            this._lastMaxLevel[monType[i]] = maxLevel[i];
                         }
                         DrawGuage2(displayName);
                         for (i = 0; i < 2; i++)
@@ -384,11 +397,6 @@
 
                     case LHMGaugeType.GPU_Hotspot:
                     case LHMGaugeType.CPU_Package:
-                        maxLimit = gaugeType == LHMGaugeType.CPU_Package ? 95 : 83;
-                        maxLevel[0] = maxLevel[0] < maxLimit ? maxLimit : maxLevel[0];
-                        this._lastMaxLevel[(Int32)gaugeType] = maxLevel[0];
-                        maxLevel[1] = maxLevel[0];
-                        maxLevel[2] = maxLevel[0];
                         DrawGuage1(displayName);
                         DrawValue($"{curLevel[0]:N1}");
                         DrawUnit("℃");
@@ -396,11 +404,6 @@
 
                     case LHMGaugeType.CPU_Power:
                     case LHMGaugeType.GPU_Power:
-                        maxLimit = gaugeType == LHMGaugeType.CPU_Power ? 120 : 320;
-                        maxLevel[0] = maxLevel[0] < maxLimit ? maxLimit : maxLevel[0];
-                        this._lastMaxLevel[(Int32)gaugeType] = maxLevel[0];
-                        maxLevel[1] = maxLevel[0];
-                        maxLevel[2] = maxLevel[0];
                         DrawGuage1(displayName);
                         DrawValue($"{curLevel[0]:N1}");
                         DrawUnit("W");
@@ -410,7 +413,6 @@
                     case LHMGaugeType.Memory:
                     case LHMGaugeType.GPU_Memory:
                         monType[0] -= 4;
-                        //monType[1] = (Int32)gaugeType;
                         for (i = 0; i < 3; i++)
                         {
                             maxLevel[i] = this._lastMaxLevel[monType[0]];
