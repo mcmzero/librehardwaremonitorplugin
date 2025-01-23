@@ -1,6 +1,7 @@
 ﻿namespace NotADoctor99.LibreHardwareMonitorPlugin
 {
     using System;
+    using System.Linq;
 
     using Loupedeck;
 
@@ -112,10 +113,10 @@
         {
             bitmapBuilder.Clear(BitmapColor.Black);
 
-            var colorLevel = new Single[] { 0.2f, 0.6f, 0.8f }; // g b r
+            //var colorLevel = new Single[] { 0.2f, 0.6f, 0.8f }; // g b r
             var level = curLevel[0] / maxLevel[0];
-            var color1 = this.GetColorByLevel(level, 255, 120);
-            var color2 = this.GetColorByLevel(level, 25, 120);
+            var color1 = this.GetColorByLevel5(level, 255, 120);
+            var color2 = this.GetColorByLevel5(level, 25, 120);
 
             var gray = new BitmapColor(BitmapColor.White, 220);
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 2, this.frOutLine[2], this.frOutLine[1] + 12, color1);
@@ -125,8 +126,8 @@
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1], this.frOutLine[2], 1, gray);
             bitmapBuilder.FillRectangle(this.frOutLine[0], this.frOutLine[1] + 15, this.frOutLine[2], 1, gray);
 
-            var leftLineColor = this.GetColorByLevel(level, 150, 80);
-            var rightLineColor = this.GetColorByLevel(level, 150, 80);
+            var leftLineColor = this.GetColorByLevel5(level, 150, 80);
+            var rightLineColor = this.GetColorByLevel5(level, 150, 80);
             this.DrawOutline(bitmapBuilder, curLevel, maxLevel, leftLineColor, rightLineColor);
 
             if (barCount == 2)
@@ -146,8 +147,8 @@
             var level = curLevel[0] / maxLevel[0];
             if (level > 0.001)
             {
-                var colorLevel = new Single[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f }; // g b r
-                var barColor = this.GetColorByLevel(level, 200, 30);
+                //var colorLevel = new Single[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f }; // g b r
+                var barColor = this.GetColorByLevel3(level, 200, 30);
 
                 var x = this.frInLine[0] + 2;
                 var y = this.frInLine[1] + 2;
@@ -179,7 +180,7 @@
             var leftLevel = curLevel[0] / maxLevel[0];
             if (leftLevel > 0.001)
             {
-                var leftBarColor = this.GetColorByLevel(leftLevel, 200, 30);
+                var leftBarColor = this.GetColorByLevel3(leftLevel, 200, 30);
                 this.GetRectangleYHByLevel(leftLevel, y, h, out var bottomLY, out var bottomLH);
                 bitmapBuilder.FillRectangle(x, bottomLY, w, bottomLH, leftBarColor);
                 bitmapBuilder.FillRectangle(x, bottomLY, w, 1, gray);
@@ -190,7 +191,7 @@
             var rightLevel = curLevel[1] / maxLevel[1];
             if (rightLevel > 0.001)
             {
-                var rightBarColor = this.GetColorByLevel(rightLevel, 200, 30);
+                var rightBarColor = this.GetColorByLevel3(rightLevel, 200, 30);
                 this.GetRectangleYHByLevel(rightLevel, y, h, out var bottomRY, out var bottomRH);
                 bitmapBuilder.FillRectangle(x + w + 5, bottomRY, w, bottomRH, rightBarColor);
                 bitmapBuilder.FillRectangle(x + w + 5, bottomRY, w, 1, gray);
@@ -199,7 +200,40 @@
             bitmapBuilder.DrawRectangle(lx + w + 5, ly, lw, lh, gray);
         }
 
-        private BitmapColor GetColorByLevel(Single level, Int32 alpha, Int32 baseRGB)
+        private BitmapColor GetColorByLevel3(Single level, Int32 alpha, Int32 baseRGB)
+        {
+            var colorLevel = new Single[] { 0f, 0.2f, 0.4f, 0.6f }; // g b r
+
+            Int32 r = baseRGB, g = baseRGB, b = baseRGB, maxColor = 255 - baseRGB;
+            if (level <= colorLevel[1])
+            {
+                // green
+                var n = (level - colorLevel[0]) / (colorLevel[1] - colorLevel[0]);
+                g += (Int32)(maxColor * n);
+            }
+            else if (level <= colorLevel[2])
+            {
+                // blue
+                var n = (level - colorLevel[1]) / (colorLevel[2] - colorLevel[1]);
+                g += (Int32)(maxColor * (1 - n));
+                b += (Int32)(maxColor * n);
+            }
+            else if (level <= colorLevel[3])
+            {
+                // red
+                var n = (level - colorLevel[2]) / (colorLevel[3] - colorLevel[2]);
+                b += (Int32)(maxColor * (1 - n));
+                r += (Int32)(maxColor * n);
+            }
+            else
+            {
+                r += maxColor;
+            }
+            return new BitmapColor(Helpers.MinMax(r, 0, 255), Helpers.MinMax(g, 0, 255), Helpers.MinMax(b, 0, 255), alpha);
+        }
+
+
+        private BitmapColor GetColorByLevel5(Single level, Int32 alpha, Int32 baseRGB)
         {
             var colorLevel = new Single[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f }; // g b r
 
