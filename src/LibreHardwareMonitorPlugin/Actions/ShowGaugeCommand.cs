@@ -113,7 +113,6 @@
         {
             bitmapBuilder.Clear(BitmapColor.Black);
 
-            //var colorLevel = new Single[] { 0.2f, 0.6f, 0.8f }; // g b r
             var level = curLevel[0] / maxLevel[0];
             var color1 = this.GetColorByLevel5(level, 255, 120);
             var color2 = this.GetColorByLevel5(level, 25, 120);
@@ -147,7 +146,6 @@
             var level = curLevel[0] / maxLevel[0];
             if (level > 0.001)
             {
-                //var colorLevel = new Single[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f }; // g b r
                 var barColor = this.GetColorByLevel3(level, 200, 30);
 
                 var x = this.frInLine[0] + 2;
@@ -231,7 +229,6 @@
             }
             return new BitmapColor(Helpers.MinMax(r, 0, 255), Helpers.MinMax(g, 0, 255), Helpers.MinMax(b, 0, 255), alpha);
         }
-
 
         private BitmapColor GetColorByLevel5(Single level, Int32 alpha, Int32 baseRGB)
         {
